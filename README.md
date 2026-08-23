@@ -237,7 +237,7 @@ orion chat
 
 ## Technical Discoveries
 
-20 constraints discovered (6 from upstream, 14 newly documented by Orion). Full reference: [`docs/ane_constraints.md`](docs/ane_constraints.md). Hardware-level constraints (compile limit, weight baking, conv vs matmul) were first documented by [maderix](https://maderix.substack.com/p/inside-the-m4-apple-neural-engine-615); the rest were discovered empirically during Orion development:
+23 constraints discovered (6 from upstream, 14 newly documented by Orion, 3 contributed by the community). Full reference: [`docs/ane_constraints.md`](docs/ane_constraints.md). Hardware-level constraints (compile limit, weight baking, conv vs matmul) were first documented by [maderix](https://maderix.substack.com/p/inside-the-m4-apple-neural-engine-615); the ANE weight budget was characterized by [@tyrauber](https://github.com/tyrauber); the rest were discovered empirically during Orion development:
 
 **Compile/eval failures:**
 - ANE rejects the `concat` MIL op — must use multi-output programs
@@ -247,6 +247,9 @@ orion chat
 - Multi-output AND multi-input require **uniform IOSurface allocation sizes** — pad to max
 - Weight dict must be `@{}` (empty dict), not `nil`, for weight-free programs
 - `milText` must be `NSData*` (UTF-8 bytes), not `NSString*`
+- **Max 16 `conv` weight tensors per program** — the binding limit on how many layers can be fused into one ANE program
+- **`pow()` and `add(scalar)` each cost one weight slot** (15 max, non-stacking) — RMSNorm inherits this via `pow(x, -0.5)`
+- `rsqrt` is not a valid MIL op — use `pow(x, -0.5)`
 
 **Silent wrong data:**
 - Multi-output surfaces ordered **alphabetically by MIL variable name**, not return tuple order

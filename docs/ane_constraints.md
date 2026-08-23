@@ -2,7 +2,7 @@
 
 > Practical reference for anyone working with Apple Neural Engine private APIs.
 >
-> Some constraints below were first documented by [maderix](https://maderix.substack.com/p/inside-the-m4-apple-neural-engine-615) through hardware-level benchmarking (marked with **[maderix]**). The MIL IR and memory constraints were discovered empirically during Orion development on M4 Max.
+> Some constraints below were first documented by [maderix](https://maderix.substack.com/p/inside-the-m4-apple-neural-engine-615) through hardware-level benchmarking (marked with **[maderix]**). The weight-budget constraints (#15-#17) were characterized by [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3) (marked with **[tyrauber]**) and independently reproduced here. The remaining MIL IR and memory constraints were discovered empirically during Orion development on M4 Max.
 
 ---
 
@@ -185,6 +185,67 @@ Always pass an empty `NSDictionary` for weight-free programs.
 
 ---
 
+## 15. Maximum 16 `conv` Weight Tensors Per Program **[tyrauber]**
+
+**What happens:** A program with 17 or more BLOBFILE-backed `conv` weight tensors fails to compile with `InvalidMILProgram`. 16 compiles fine.
+
+**Details:** The ceiling is on the number of distinct weight tensors, not on node count or total weight bytes. A 121-node program with 16 weights compiles; an 87-node program that exceeds the weight budget does not.
+
+**Practical impact:** This is the binding limit on mega-kernel strategies. A transformer layer with 1 norm + 3 linears spends 4 slots, so roughly 3-4 fused layers is the ceiling for a single ANE program. Beyond that, split into multiple programs.
+
+**Verification:** `experiments/ane_weight_limit_probe.m` sweeps conv count and reports compile success. Measured on M4, macOS 26.5.2:
+
+```
+14 conv -> SUCCESS    17 conv -> FAILED
+15 conv -> SUCCESS    18 conv -> FAILED
+16 conv -> SUCCESS
+```
+
+**Discovered:** [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3) on M4 Max / macOS 15. Independently reproduced on M4 / macOS 26.5.2.
+
+---
+
+## 16. `pow()` and `add(scalar)` Each Cost One Weight Slot **[tyrauber]**
+
+**What happens:** A program containing `pow()` or `add()` against a scalar constant drops the weight ceiling from 16 to 15. At 16 weights plus either op, compilation fails.
+
+**Details:** The penalty does **not** stack — a program using both `pow()` and `add(scalar)` still compiles at 15 weights. Elementwise ops `sqrt`, `tanh`, `sigmoid`, and `exp` carry no penalty and compile fine at 16.
+
+**Why RMSNorm appears to break things:** RMSNorm is built on `pow(x, -0.5)`, so any program containing one silently inherits the -1 penalty. This originally looked like a rule about "mixing norm and linear weight types"; the real cause is the `pow()` op. There is no weight-type mixing rule.
+
+**Verification:** measured on M4, macOS 26.5.2:
+
+```
+16 conv + sqrt         -> SUCCESS    16 conv + add(scalar) -> FAILED
+16 conv + tanh         -> SUCCESS    15 conv + add(scalar) -> SUCCESS
+16 conv + sigmoid      -> SUCCESS    16 conv + pow(const)  -> FAILED
+16 conv + exp          -> SUCCESS    15 conv + pow(const)  -> SUCCESS
+16 conv + add + pow    -> FAILED     15 conv + add + pow   -> SUCCESS
+```
+
+**Workaround:** budget 15 weight tensors for any program containing a norm, or restructure to avoid `pow()` where an unpenalized op will do.
+
+**Discovered:** [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3), correcting the initial "mixed weight type" framing. Independently reproduced.
+
+---
+
+## 17. `rsqrt` Is Not a Valid MIL Op **[tyrauber]**
+
+**What happens:** Any program containing `rsqrt` fails to compile, regardless of weight count — including a program with zero weights.
+
+**Workaround:** use `pow(x, -0.5)`, which is what `orion_mil_rmsnorm` does. Note this incurs the #16 penalty. See also #10 (`gelu` is likewise unavailable and must be expanded).
+
+**Verification:** measured on M4, macOS 26.5.2:
+
+```
+15 conv + rsqrt -> FAILED
+ 0 conv + rsqrt -> FAILED
+```
+
+**Discovered:** [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3). Independently reproduced.
+
+---
+
 ## Quick Reference Table
 
 | # | Constraint | Severity | Symptom | Source |
@@ -203,3 +264,6 @@ Always pass an empty `NSDictionary` for weight-free programs.
 | 12 | Uniform input buffer sizes | Eval fail | `status=0x1d` | Orion |
 | 13 | Alphabetical input ordering | Silent wrong data | Inputs misassigned | Orion |
 | 14 | Flat buffer = packed shape data | Silent wrong data | ~260x smaller values | Orion |
+| 15 | Max 16 conv weights | Compile fail | `InvalidMILProgram` | tyrauber |
+| 16 | `pow`/`add(scalar)` cost a slot | Compile fail | `InvalidMILProgram` at 16 | tyrauber |
+| 17 | No `rsqrt` op | Compile fail | `InvalidMILProgram` | tyrauber |
