@@ -185,15 +185,44 @@ Always pass an empty `NSDictionary` for weight-free programs.
 
 ---
 
-## 15. Maximum 16 `conv` Weight Tensors Per Program **[tyrauber]**
+## 15. Maximum 16 BLOBFILE Weight Tensors Per Program **[tyrauber]**
 
-**What happens:** A program with 17 or more BLOBFILE-backed `conv` weight tensors fails to compile with `InvalidMILProgram`. 16 compiles fine.
+**What happens:** A program with 17 or more BLOBFILE-backed weight tensors fails to compile with `InvalidMILProgram`. 16 compiles fine.
 
-**Details:** The ceiling is on the number of distinct weight tensors, not on node count or total weight bytes. A 121-node program with 16 weights compiles; an 87-node program that exceeds the weight budget does not.
+**The budget counts tensors, not bytes, and not just conv weights.** Three properties, all measured:
 
-**Practical impact:** This is the binding limit on mega-kernel strategies. A transformer layer with 1 norm + 3 linears spends 4 slots, so roughly 3-4 fused layers is the ceiling for a single ANE program. Beyond that, split into multiple programs.
+**a) It is a count budget, not a byte budget.** The ceiling is 16 across a 2304x range in per-weight size:
 
-**Verification:** `experiments/ane_weight_limit_probe.m` sweeps conv count and reports compile success. Measured on M4, macOS 26.5.2:
+```
+C     bytes/weight   ceiling   total at ceiling
+16    512            16        0.01 MB
+64    8192           16        0.12 MB
+256   131072         16        2.00 MB
+768   1179648        16        18.00 MB
+```
+
+**b) Shape variety is irrelevant.** Mixing shapes within one program does not shift the ceiling, even at realistic FFN dimensions or extreme aspect ratios:
+
+```
+uniform 64            -> 16    (0.12 MB)
+alternating 64/256    -> 16    (0.50 MB)
+cycling 64/128/256    -> 16    (0.56 MB)
+FFN-like 768/3072     -> 16    (72.00 MB)
+lopsided 32/1024      -> 16    (1.00 MB)
+```
+
+**c) Every BLOBFILE tensor costs a full slot, regardless of size.** A 128-byte bias vector consumes the same budget as a 1.18 MB weight matrix:
+
+```
+conv only         -> 16 conv  (16 blobs)
+conv + bias each  ->  8 conv  (16 blobs)
+```
+
+**Practical impact:** this is the binding limit on mega-kernel fusion, and it is stricter than "16 layers of weights". A linear layer *with a bias* costs **two** slots, not one. Budget in blobs, not in conceptual weights: count every `const()` that references a BLOBFILE, including biases and norm weight vectors.
+
+Inline constants — conv `strides`/`pad`/`dilations` attributes and similar — do not count against this budget. See #16 for the one case where an inline scalar does cost a slot.
+
+**Verification:** `experiments/ane_weight_limit_probe.m`, modes `size`, `shape` and `kind`. Measured on M4, macOS 26.5.2:
 
 ```
 14 conv -> SUCCESS    17 conv -> FAILED
@@ -201,7 +230,7 @@ Always pass an empty `NSDictionary` for weight-free programs.
 16 conv -> SUCCESS
 ```
 
-**Discovered:** [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3) on M4 Max / macOS 15. Independently reproduced on M4 / macOS 26.5.2.
+**Discovered:** [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3) on M4 Max / macOS 15. Independently reproduced on M4 / macOS 26.5.2; the size, shape and bias-slot properties characterized here.
 
 ---
 
@@ -223,7 +252,14 @@ Always pass an empty `NSDictionary` for weight-free programs.
 16 conv + add + pow    -> FAILED     15 conv + add + pow   -> SUCCESS
 ```
 
-**Workaround:** budget 15 weight tensors for any program containing a norm, or restructure to avoid `pow()` where an unpenalized op will do.
+**Interaction with #15:** the penalty applies to the total blob budget, not to a conv-only count. A program with `pow()` and paired conv+bias blobs caps at 7 convs (14 blobs), consistent with a 15-blob ceiling:
+
+```
+conv + bias        -> 8 conv (16 blobs)
+conv + bias + pow  -> 7 conv (14 blobs)
+```
+
+**Workaround:** budget 15 blobs for any program containing a norm, or restructure to avoid `pow()` where an unpenalized op will do.
 
 **Discovered:** [@tyrauber](https://github.com/tyrauber) in [#3](https://github.com/mechramc/Orion/issues/3), correcting the initial "mixed weight type" framing. Independently reproduced.
 
@@ -264,6 +300,6 @@ Always pass an empty `NSDictionary` for weight-free programs.
 | 12 | Uniform input buffer sizes | Eval fail | `status=0x1d` | Orion |
 | 13 | Alphabetical input ordering | Silent wrong data | Inputs misassigned | Orion |
 | 14 | Flat buffer = packed shape data | Silent wrong data | ~260x smaller values | Orion |
-| 15 | Max 16 conv weights | Compile fail | `InvalidMILProgram` | tyrauber |
+| 15 | Max 16 BLOBFILE weights (bias included) | Compile fail | `InvalidMILProgram` | tyrauber |
 | 16 | `pow`/`add(scalar)` cost a slot | Compile fail | `InvalidMILProgram` at 16 | tyrauber |
 | 17 | No `rsqrt` op | Compile fail | `InvalidMILProgram` | tyrauber |
