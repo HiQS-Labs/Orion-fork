@@ -248,7 +248,7 @@ orion chat
 - Weight dict must be `@{}` (empty dict), not `nil`, for weight-free programs
 - `milText` must be `NSData*` (UTF-8 bytes), not `NSString*`
 - **Max 16 BLOBFILE weight tensors per program** — a count budget, not a byte budget, and every blob costs a full slot: a linear *with a bias* spends two. The binding limit on how many layers can be fused into one ANE program
-- **`pow()` and `add(scalar)` each cost one weight slot** (15 max, non-stacking) — RMSNorm inherits this via `pow(x, -0.5)`
+- **`pow()`, `add(scalar)` and `mul(scalar)` each cost one weight slot** (15 max, non-stacking) — RMSNorm inherits this via `pow(x, -0.5)`, and activation lowering decides whether an activation costs budget at all
 - `rsqrt` is not a valid MIL op — use `pow(x, -0.5)`
 
 **Silent wrong data:**

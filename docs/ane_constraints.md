@@ -234,11 +234,29 @@ Inline constants — conv `strides`/`pad`/`dilations` attributes and similar —
 
 ---
 
-## 16. `pow()` and `add(scalar)` Each Cost One Weight Slot **[tyrauber]**
+## 16. Scalar-Operand Ops Cost One Weight Slot **[tyrauber]**
 
-**What happens:** A program containing `pow()` or `add()` against a scalar constant drops the weight ceiling from 16 to 15. At 16 weights plus either op, compilation fails.
+**What happens:** A program containing `pow()`, `add()`, or `mul()` against an *inline scalar constant* drops the blob ceiling from 16 to 15. At 16 blobs plus any such op, compilation fails.
 
-**Details:** The penalty does **not** stack — a program using both `pow()` and `add(scalar)` still compiles at 15 weights. Elementwise ops `sqrt`, `tanh`, `sigmoid`, and `exp` carry no penalty and compile fine at 16.
+`mul(scalar)` carrying the same penalty as `add(scalar)` is worth noting: it means the cost attaches to feeding an inline scalar into an elementwise op, not to a specific opcode.
+
+**Details:** The penalty does **not** stack — a program using several of these still compiles at 15 blobs. Unary elementwise ops with no constant operand (`sqrt`, `tanh`, `sigmoid`, `exp`) carry no penalty and compile fine at 16:
+
+```
+16 conv + sigmoid      -> SUCCESS     16 conv + mul(scalar) -> FAILED
+16 conv + tanh         -> SUCCESS     16 conv + add(scalar) -> FAILED
+16 conv + sqrt         -> SUCCESS     16 conv + pow(const)  -> FAILED
+16 conv + exp          -> SUCCESS
+```
+
+**Consequence for activation lowering:** how an activation is expressed decides whether it costs budget. `SiLU(x) = x * sigmoid(x)` uses no scalar constant and stays at 16. Rewriting it via the identity `sigmoid(x) = 0.5*(tanh(0.5x)+1)` introduces scalar `mul` and `add`, dropping the ceiling to 15:
+
+```
+SiLU via sigmoid  -> 16
+SiLU via tanh     -> 15
+```
+
+Both are mathematically exact; only the second spends a slot. In a program that already contains a norm the point is moot, since `pow(x, -0.5)` has already reduced the budget to 15 and the penalty does not stack.
 
 **Why RMSNorm appears to break things:** RMSNorm is built on `pow(x, -0.5)`, so any program containing one silently inherits the -1 penalty. This originally looked like a rule about "mixing norm and linear weight types"; the real cause is the `pow()` op. There is no weight-type mixing rule.
 
@@ -301,5 +319,5 @@ conv + bias + pow  -> 7 conv (14 blobs)
 | 13 | Alphabetical input ordering | Silent wrong data | Inputs misassigned | Orion |
 | 14 | Flat buffer = packed shape data | Silent wrong data | ~260x smaller values | Orion |
 | 15 | Max 16 BLOBFILE weights (bias included) | Compile fail | `InvalidMILProgram` | tyrauber |
-| 16 | `pow`/`add(scalar)` cost a slot | Compile fail | `InvalidMILProgram` at 16 | tyrauber |
+| 16 | Scalar-operand ops cost a slot | Compile fail | `InvalidMILProgram` at 16 | tyrauber |
 | 17 | No `rsqrt` op | Compile fail | `InvalidMILProgram` | tyrauber |

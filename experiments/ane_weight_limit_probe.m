@@ -13,6 +13,7 @@
 //   size   does the ceiling depend on weight BYTES or on weight COUNT?
 //   shape  does mixing weight shapes within one program shift the ceiling?
 //   kind   do bias-style [1,C,1,1] blobs consume slots like [C,C,1,1] conv weights?
+//   silu   does PR #2's sigmoid -> tanh-identity SiLU rewrite cost budget?
 //
 // Build:
 //   xcrun clang -O2 -fobjc-arc -DACCELERATE_NEW_LAPACK -I . -I core -I compiler \
@@ -20,7 +21,7 @@
 //     experiments/ane_weight_limit_probe.m core/ane_runtime.m core/iosurface_tensor.m \
 //     -o build/ane_weight_limit_probe
 // Run:
-//   ./build/ane_weight_limit_probe [base|size|shape|kind]
+//   ./build/ane_weight_limit_probe [base|size|shape|kind|silu]
 //
 // Set DUMP_MIL=1 to print a sample generated program instead of compiling.
 
@@ -36,6 +37,7 @@ typedef enum {
     PEN_NONE = 0,
     PEN_SQRT, PEN_TANH, PEN_SIGMOID, PEN_EXP,
     PEN_ADD_SCALAR, PEN_POW, PEN_RSQRT, PEN_ADD_AND_POW,
+    PEN_MUL_SCALAR, PEN_SILU_SIGMOID, PEN_SILU_TANH,
 } PenaltyOp;
 
 // A program shape: `dims` cycles across the conv chain, so consecutive weights
@@ -58,6 +60,9 @@ static const char *penalty_name(PenaltyOp p) {
         case PEN_POW:         return "pow(const)";
         case PEN_RSQRT:       return "rsqrt";
         case PEN_ADD_AND_POW: return "add+pow";
+        case PEN_MUL_SCALAR:  return "mul(scalar)";
+        case PEN_SILU_SIGMOID: return "silu via sigmoid";
+        case PEN_SILU_TANH:   return "silu via tanh";
     }
     return "?";
 }
@@ -107,6 +112,39 @@ static void append_penalty(NSMutableString *m, PenaltyOp pen, int ch,
             [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@ = pow(x=%@, y=%@_e)[name=string(\"%@\")];\n",
                 ch, SEQ, out_name, in, out_name, out_name];
             break;
+        case PEN_MUL_SCALAR:
+            [m appendFormat:@"        fp16 %@_k = const()[name=string(\"%@_k\"), val=fp16(0.5)];\n",
+                out_name, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@ = mul(x=%@, y=%@_k)[name=string(\"%@\")];\n",
+                ch, SEQ, out_name, in, out_name, out_name];
+            break;
+
+        // Pre-PR lowering: SiLU(x) = x * sigmoid(x)
+        case PEN_SILU_SIGMOID:
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@_sig = sigmoid(x=%@)[name=string(\"%@_sig\")];\n",
+                ch, SEQ, out_name, in, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@ = mul(x=%@, y=%@_sig)[name=string(\"%@\")];\n",
+                ch, SEQ, out_name, in, out_name, out_name];
+            break;
+
+        // PR #2 lowering: sigmoid(x) = 0.5 * (tanh(0.5x) + 1)
+        case PEN_SILU_TANH:
+            [m appendFormat:@"        fp16 %@_half = const()[name=string(\"%@_half\"), val=fp16(0.5)];\n",
+                out_name, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@_hx = mul(x=%@, y=%@_half)[name=string(\"%@_hx\")];\n",
+                ch, SEQ, out_name, in, out_name, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@_th = tanh(x=%@_hx)[name=string(\"%@_th\")];\n",
+                ch, SEQ, out_name, out_name, out_name];
+            [m appendFormat:@"        fp16 %@_one = const()[name=string(\"%@_one\"), val=fp16(1.0)];\n",
+                out_name, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@_onep = add(x=%@_th, y=%@_one)[name=string(\"%@_onep\")];\n",
+                ch, SEQ, out_name, out_name, out_name, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@_sg = mul(x=%@_onep, y=%@_half)[name=string(\"%@_sg\")];\n",
+                ch, SEQ, out_name, out_name, out_name, out_name];
+            [m appendFormat:@"        tensor<fp16, [1,%d,1,%d]> %@ = mul(x=%@, y=%@_sg)[name=string(\"%@\")];\n",
+                ch, SEQ, out_name, in, out_name, out_name];
+            break;
+
         case PEN_ADD_AND_POW:
             [m appendFormat:@"        fp16 %@_k = const()[name=string(\"%@_k\"), val=fp16(0.5)];\n",
                 out_name, out_name];
@@ -320,6 +358,37 @@ static void mode_kind(void) {
     printf("  => consistent with a %d-blob budget under pow()\n", with_bias_pow * 2 + 1);
 }
 
+
+// Does PR #2's SiLU rewrite (sigmoid -> 0.5*(tanh(0.5x)+1)) cost budget?
+static void mode_silu(void) {
+    printf("=== Does the SiLU lowering affect the blob budget? ===\n");
+    printf("comparing sigmoid-based SiLU against the tanh-identity rewrite\n\n");
+    static const int d64 = 64;
+
+    struct { const char *label; PenaltyOp pen; } cases[] = {
+        { "no activation",     PEN_NONE },
+        { "sigmoid (alone)",   PEN_SIGMOID },
+        { "mul(scalar)",       PEN_MUL_SCALAR },
+        { "add(scalar)",       PEN_ADD_SCALAR },
+        { "SiLU via sigmoid",  PEN_SILU_SIGMOID },
+        { "SiLU via tanh",     PEN_SILU_TANH },
+    };
+
+    printf("  %-20s %s\n", "program contains", "conv ceiling");
+    for (unsigned i = 0; i < sizeof(cases)/sizeof(cases[0]); i++) {
+        int c = find_ceiling(uniform_cfg(&d64, false, cases[i].pen), 24, NULL);
+        printf("  %-20s %d\n", cases[i].label, c);
+    }
+
+    // With a norm already present the budget is 15 regardless (#16 non-stacking),
+    // so the rewrite should cost nothing extra there.
+    printf("\n  With pow() already in the program (norm present):\n");
+    int pow_only = find_ceiling(uniform_cfg(&d64, false, PEN_POW), 24, NULL);
+    int pow_plus = find_ceiling(uniform_cfg(&d64, false, PEN_ADD_AND_POW), 24, NULL);
+    printf("    pow alone          %d\n", pow_only);
+    printf("    pow + add(scalar)  %d\n", pow_plus);
+}
+
 int main(int argc, char **argv) {
     @autoreleasepool {
         const char *mode = (argc > 1) ? argv[1] : "base";
@@ -337,7 +406,8 @@ int main(int argc, char **argv) {
         else if (!strcmp(mode, "size"))  mode_size();
         else if (!strcmp(mode, "shape")) mode_shape();
         else if (!strcmp(mode, "kind"))  mode_kind();
-        else { fprintf(stderr, "unknown mode: %s (base|size|shape|kind)\n", mode); return 2; }
+        else if (!strcmp(mode, "silu"))  mode_silu();
+        else { fprintf(stderr, "unknown mode: %s (base|size|shape|kind|silu)\n", mode); return 2; }
 
         printf("\ncompiles used: %d\n", orion_compile_count());
     }
