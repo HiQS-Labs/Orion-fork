@@ -119,7 +119,14 @@ and `train.m` only go through the pre-wired kernel adapters in `kernels/inferenc
   constants at compile time, `dW` needs `cblas_sgemm`, NLL loss needs `gather` (not in MIL), and
   the classifier's 32000-channel backward conv is rejected by ANE. `data_loader.m` mmaps a
   Karpathy-style pretokenized `uint16` file (no tokenizer at train time). Each training step
-  calls `orion_program_reload_weights()` on all 6 per-layer ANE kernel handles.
+  writes updated weights to disk and calls `orion_program_reload_weights()` on **5 of the 6**
+  per-layer ANE kernel handles (`patch_layer`, `stories_train.m:993-1023`) — `sdpa_bwd2` has no
+  weights and its program is left untouched. If any layer's patch fails it falls back to a full
+  `orion_trainer_recompile` (`stories_train.m:1042`).
+- **Compile budget guard** (`orion_trainer_needs_restart`, `stories_train.m:1055-1064`): the
+  trainer tracks `orion_compile_count()` against `STORIES_MAX_COMPILES` (100, deliberately
+  conservative against the ~119 hard limit) and reports when a process restart is needed before
+  the next full recompile would fit — `n_layers * 6` compiles.
 - Supporting: `core/lora_adapter` (LoRA A/B matrices into IOSurface tensors, hot-swappable
   without recompiling), `core/checkpoint` (binary checkpoint format, magic `BLZT`, compatible
   with a prior "ANEgpt" project), `core/iosurface_tensor` (the CPU↔ANE handoff buffer type,
@@ -171,9 +178,15 @@ and `train.m` only go through the pre-wired kernel adapters in `kernels/inferenc
   `lora.c` and `stories_train.c` are the largest frontends and likely worth a follow-up pass.
   `compiler/patterns.c` was only read up to its attention-pattern head.
   What `compiler/pass_ane_validate.c` specifically checks (only its scaffolding was read).
-- Whether `orion_trainer_recompile` (full-recompile fallback, referenced near
-  `kernels/training/stories_train.h:166-169`) is actually exercised, versus the delta-reload path
-  traced here.
+- **Stale doc comment in the source:** `kernels/training/stories_train.h:166-167` says
+  delta-recompile "Uses `orion_program_patch_weights`," but the implementation
+  (`patch_layer`, `stories_train.m:993-1023`) calls `orion_program_reload_weights` — a different
+  primitive. Either the comment is stale or the implementation drifted; worth reconciling.
+  `orion_program_patch_weights` still exists in `core/ane_runtime.m` — who its live callers are
+  was not traced.
+- Whether the full-recompile fallback (`orion_trainer_recompile`, wired at
+  `stories_train.m:1042`) is ever actually taken in practice, or only on a patch failure that
+  never occurs.
 - `model/convert/hf_to_blobs_llama.py` was assumed structurally parallel to the GPT-2 converter
   by naming/README, not read directly.
 

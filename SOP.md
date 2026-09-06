@@ -77,28 +77,61 @@ Short, read-only benchmark runs (a single `./orion bench` invocation) don't need
 Before trusting any number or fixing anything based on a run:
 
 ```bash
-make test
-make test-compiler
+make test-compiler   # 4 suites, hardware-free: graph IR, passes, ANE passes, compiler equivalence
+make test            # the above plus the runtime/kernel/tokenizer suites
 ```
 
 There's no CI here — this is the entire gate. If either fails, the run downstream of it isn't
 trustworthy evidence of anything.
 
+The two are not interchangeable. `make test-compiler` is pure graph-IR/codegen work: it runs
+anywhere, needs no weights and no Neural Engine, and is the right quick gate for a compiler
+change (verified green, 4/4, while this doc was written). `make test` additionally builds suites
+that call `orion_ane_init()` — `test_ane_runtime`, `test_delta_compile`, `test_program_cache`,
+`test_decode_ane*`, `test_infer_golden_ane`, `test_lora`, `test_train_kernels` and others — which
+need real Apple Silicon hardware, and the golden/inference suites need weights present per Step 4's
+precondition. On a fresh clone with an empty `model/blobs/`, treat a `make test` failure as
+"couldn't run" until you've ruled out a missing precondition.
+
 ### Step 4: Execute the run
-Use the CLI directly:
+
+**Precondition:** `model/blobs/` ships empty (just a `.gitkeep`). Nothing below runs until weights
+have been generated with `model/convert/hf_to_blobs_gpt2.py` (or `hf_to_blobs_llama.py`) into the
+directory the command expects — the default is `model/blobs/gpt2_124m`.
+
+`bench` takes a **subcommand**, not bare flags:
 
 ```bash
-./orion bench --ane            # ANE kernel/e2e latency
-./orion infer  --ane --prompt "..."   # spot-check a specific behavior
-./orion train  --steps N              # a training-step timing/correctness pass
+./orion bench kernels   --iters 50            # per-kernel ANE compile + eval latency
+./orion bench inference --ane --max_tokens 64 # end-to-end throughput (--ane-prefill for hybrid)
+./orion bench training  --steps N             # training step breakdown
+./orion bench swap --weights_a A --weights_b B --iters 100   # weight-swap endurance
 ```
+
+`make bench` is a shortcut for `./orion bench kernels --iters 10`. For spot checks outside the
+benchmark harness, `./orion infer --ane --prompt "..."` and `./orion train --steps N` (also needs
+`--weights` and `--dataset`) work directly.
 
 Note the exact command, model/bucket, and mode (CPU / hybrid / full-ANE) — that context is what
 makes the resulting number reproducible later.
 
 ### Step 5: Compare against baseline
-Check the new result against what's already recorded in `RESULTS.md` or
-`docs/m2_benchmarks.md`, or against the relevant golden fixture
+
+For performance, use the built-in regression check rather than eyeballing: `--save-baseline` on
+any `bench` subcommand writes `benchmarks/baseline.json`, and subsequent runs automatically print
+a PASS/WARN/NEW comparison against it.
+
+```bash
+./orion bench kernels --iters 50 --save-baseline   # record
+./orion bench kernels --iters 50                   # compare against the recorded baseline
+```
+
+**`benchmarks/` is gitignored**, so the baseline is a local convenience, not evidence anyone else
+can see. A number that needs to be citable goes into `RESULTS.md` or `docs/m2_benchmarks.md` with
+its date, hardware, and mode — per §1, that's the only form of performance claim that survives
+leaving your machine.
+
+For correctness, compare against the relevant golden fixture
 (`tests/forward_golden.json`, `tests/test_infer_golden.json`, `tests/tokenizer_golden.json`) via
 the matching test binary. A result with nothing to compare against is a first data point, not yet
 a claim of "faster" or "regressed."

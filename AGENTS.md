@@ -67,6 +67,10 @@ surfaces are narrow and real: `make test`, `make test-compiler`, the golden-outp
 `RESULTS.md` / `docs/m2_benchmarks.md`. There is currently no CI — a green local run is
 self-reported; say so plainly rather than implying it was independently checked.
 
+Know what each gate can actually prove: `make test-compiler` is hardware-free and runs anywhere,
+while most of `make test` needs real Apple Silicon and populated `model/blobs/` (which ships
+empty). A suite that couldn't run is not a suite that passed — see `SOP.md` → Step 3.
+
 ### 7. Record only consequential bets
 
 If a change is Costly, a one-way door, or assumption-heavy (e.g. a new ANE constraint discovered,
