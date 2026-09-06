@@ -1,0 +1,18 @@
+Loading tokenizer...
+tokenizer: loaded 50257 vocab, 49992 merges
+Loading weights from model/blobs/gpt2_124m...
+Weights loaded in 92.9 ms
+Prompt: "Hello" → 1 tokens, mode: CPU only
+Warmup: 3 iterations...
+Timed run: generating 64 tokens...
+
+=== Inference Benchmark (GPT-2 124M, 64 tokens, CPU only) ===
+  Prefill:     16.0 ms (1 tokens)
+  Decode p50:  15.3 ms
+  Decode p90:  15.6 ms
+  Decode avg:  15.3 ms
+  Throughput:  65 tok/s
+  Generated:   64 tokens
+  RSS:         653 MB
+
+No baseline found. Run with --save-baseline first.

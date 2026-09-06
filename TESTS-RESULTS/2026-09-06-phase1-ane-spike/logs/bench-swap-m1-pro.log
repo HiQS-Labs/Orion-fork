@@ -1,0 +1,11 @@
+bench swap: 100 iterations, bucket=64, compiles=0
+  weights_a: A
+  weights_b: B
+  RSS start: 4.6 MB
+
+2026-09-06 15:15:24.750 orion[6019:61179] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x11c722cb0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/33E762A0AF61139D041F7B6E0F15EC4305F422CB9206E8F9CA5A7B4E0BE05F34_DF3F619804A92FDB4057192DC43DD748EA778ADC52BC498CE80524C014B81119_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/33E762A0AF61139D041F7B6E0F15EC4305F422CB9206E8F9CA5A7B4E0BE05F34_DF3F619804A92FDB4057192DC43DD748EA778ADC52BC498CE80524C014B81119_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+bench swap: compile failed at iter 0

@@ -1,0 +1,27 @@
+make: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-AOSNoPz2' (errno=Operation not permitted)
+make: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-GA4q84r2' (errno=Operation not permitted)
+xcrun clang -O2 -fobjc-arc -DACCELERATE_NEW_LAPACK -Wall -Wextra -I . -I core -I compiler -framework Foundation -o build/tests/test_graph_ir tests/test_graph_ir.m build/compiler/graph.o build/compiler/builder.o build/compiler/topo.o build/compiler/patterns.o build/compiler/validate.o build/compiler/pass_dce.o build/compiler/pass_identity.o build/compiler/pass_conv_bias.o build/compiler/pass_cast.o build/compiler/pass_sram.o build/compiler/pass_uniform_outputs.o build/compiler/pass_ane_validate.o build/compiler/pipeline.o build/compiler/frontends/gpt2_prefill.o build/compiler/frontends/gpt2_decode.o build/compiler/frontends/gpt2_final.o build/compiler/frontends/classifier_softmax.o build/compiler/frontends/stories_train.o build/compiler/frontends/lora.o build/compiler/codegen.o build/compiler/kernel_adapter.o build/compiler/mil_diff.o
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-Qs6EvdEu' (errno=Operation not permitted)
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-HMlGZW2x' (errno=Operation not permitted)
+xcrun clang -O2 -fobjc-arc -DACCELERATE_NEW_LAPACK -Wall -Wextra -I . -I core -I compiler -framework Foundation -o build/tests/test_passes tests/test_passes.m build/compiler/graph.o build/compiler/builder.o build/compiler/topo.o build/compiler/patterns.o build/compiler/validate.o build/compiler/pass_dce.o build/compiler/pass_identity.o build/compiler/pass_conv_bias.o build/compiler/pass_cast.o build/compiler/pass_sram.o build/compiler/pass_uniform_outputs.o build/compiler/pass_ane_validate.o build/compiler/pipeline.o build/compiler/frontends/gpt2_prefill.o build/compiler/frontends/gpt2_decode.o build/compiler/frontends/gpt2_final.o build/compiler/frontends/classifier_softmax.o build/compiler/frontends/stories_train.o build/compiler/frontends/lora.o build/compiler/codegen.o build/compiler/kernel_adapter.o build/compiler/mil_diff.o
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-Iyaqt69u' (errno=Operation not permitted)
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-nL9e8S0I' (errno=Operation not permitted)
+tests/test_passes.m:36:9: warning: unused variable 'z' [-Wunused-variable]
+   36 |     int z = orion_gb_mul(g, x, x, "z_dead");   // NOT used by output
+      |         ^
+tests/test_passes.m:103:9: warning: unused variable 'dead' [-Wunused-variable]
+  103 |     int dead = orion_gb_add(g, x, x, "dead"); // unreachable
+      |         ^~~~
+2 warnings generated.
+xcrun clang -O2 -fobjc-arc -DACCELERATE_NEW_LAPACK -Wall -Wextra -I . -I core -I compiler -framework Foundation -o build/tests/test_ane_passes tests/test_ane_passes.m build/compiler/graph.o build/compiler/builder.o build/compiler/topo.o build/compiler/patterns.o build/compiler/validate.o build/compiler/pass_dce.o build/compiler/pass_identity.o build/compiler/pass_conv_bias.o build/compiler/pass_cast.o build/compiler/pass_sram.o build/compiler/pass_uniform_outputs.o build/compiler/pass_ane_validate.o build/compiler/pipeline.o build/compiler/frontends/gpt2_prefill.o build/compiler/frontends/gpt2_decode.o build/compiler/frontends/gpt2_final.o build/compiler/frontends/classifier_softmax.o build/compiler/frontends/stories_train.o build/compiler/frontends/lora.o build/compiler/codegen.o build/compiler/kernel_adapter.o build/compiler/mil_diff.o
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-JltfW5MK' (errno=Operation not permitted)
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-1dCvvMCy' (errno=Operation not permitted)
+xcrun clang -O2 -fobjc-arc -DACCELERATE_NEW_LAPACK -Wall -Wextra -I . -I core -I compiler -framework Foundation -o build/tests/test_compiler_equiv tests/test_compiler_equiv.m build/compiler/graph.o build/compiler/builder.o build/compiler/topo.o build/compiler/patterns.o build/compiler/validate.o build/compiler/pass_dce.o build/compiler/pass_identity.o build/compiler/pass_conv_bias.o build/compiler/pass_cast.o build/compiler/pass_sram.o build/compiler/pass_uniform_outputs.o build/compiler/pass_ane_validate.o build/compiler/pipeline.o build/compiler/frontends/gpt2_prefill.o build/compiler/frontends/gpt2_decode.o build/compiler/frontends/gpt2_final.o build/compiler/frontends/classifier_softmax.o build/compiler/frontends/stories_train.o build/compiler/frontends/lora.o build/compiler/codegen.o build/compiler/kernel_adapter.o build/compiler/mil_diff.o
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-tdanlLfc' (errno=Operation not permitted)
+xcrun: error: couldn't create cache file '/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/xcrun_db-jFQNFNrM' (errno=Operation not permitted)
+test_graph_ir                  PASS
+test_passes                    PASS
+test_ane_passes                PASS
+test_compiler_equiv            PASS
+
+4/4 passed, 0 failed

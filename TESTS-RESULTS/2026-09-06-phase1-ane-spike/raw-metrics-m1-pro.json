@@ -1,0 +1,228 @@
+[
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "compiler (hardware-free suites)",
+    "benchmark": "make_test_compiler",
+    "command": "make test-compiler",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {},
+    "throughput": {},
+    "status": "PASS",
+    "notes": "4/4 suites green: graph IR, passes, ANE passes, compiler equivalence. Needs no weights and no ANE.",
+    "log": "logs/test-compiler-m1-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "kernels/training/stories_train",
+    "benchmark": "train_50_steps_delta",
+    "command": "./orion train --weights model/blobs/stories110m_train --dataset data/tinystories_data00.bin --steps 50 --checkpoint_every 25",
+    "wall_clock_seconds": 209.53,
+    "timing_breakdown": {
+      "init_compile_ms": 11100.0,
+      "avg_train_ms": 3099.7,
+      "avg_recompile_ms": 837.8,
+      "avg_total_step_ms": 3956.5,
+      "delta_save_ms_avg": 476.0,
+      "delta_patch_ms_avg": 362.0,
+      "delta_total_ms_min": 812.3,
+      "delta_total_ms_max": 937.4,
+      "delta_total_ms_avg": 837.7
+    },
+    "throughput": {
+      "tflops": 0.449
+    },
+    "compile_count_start": 0,
+    "compile_count_end": 72,
+    "programs_compiled_at_startup": 72,
+    "weight_kernels_patched": 60,
+    "delta_path_taken": true,
+    "rss_peak_mb": 2249,
+    "status": "PASS",
+    "notes": "Delta path taken on 50/50 steps, zero fallbacks, zero restarts. Loss 12.2324 -> 10.3588, monotone trend. grad_accum defaulted to 10 (STORIES_ACCUM_STEPS), not the 4 used in upstream RESULTS.md, so avg_train_ms is over 10 microbatches and is NOT comparable to that file; avg_recompile_ms is per-step and is comparable.",
+    "log": "logs/train-m1-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "kernels/training/stories_train",
+    "benchmark": "bench_training_20_steps",
+    "command": "./orion bench training --steps 20 --weights model/blobs/stories110m_train",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {
+      "avg_forward_ms": 497.7,
+      "avg_bwd_dW_ms": 746.6,
+      "avg_adam_ms": 54.4,
+      "avg_recompile_ms": 860.9,
+      "avg_total_step_ms": 2159.6
+    },
+    "throughput": {},
+    "delta_path_taken": true,
+    "rss_peak_mb": 2371,
+    "status": "PASS",
+    "notes": "Independent confirmation of the delta path. Backward+dW is the largest single phase (35%), recompile 40%.",
+    "log": "logs/bench-training-m1-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "apps/cli/commands/bench (kernels)",
+    "benchmark": "bench_kernels_gpt2_50_iters",
+    "command": "./orion bench kernels --iters 50",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {},
+    "throughput": {},
+    "status": "FAIL",
+    "rss_peak_mb": 34,
+    "notes": "All five GPT-2 inference kernels COMPILE FAILED on M1: prefill_attn, prefill_ffn, final_ln, decode_proj, decode_ffn. Root cause isolated to fp32 program I/O \u2014 see docs/ane_constraints.md #18. No SRAM estimates could be captured on this machine.",
+    "log": "logs/kernels-m1-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "apps/cli/commands/bench (inference)",
+    "benchmark": "bench_inference_ane_64_tokens",
+    "command": "./orion bench inference --ane --max_tokens 64",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {
+      "prefill_ms": 83.6,
+      "decode_p50_ms": 15.4,
+      "decode_p90_ms": 15.9,
+      "decode_avg_ms": 15.8
+    },
+    "throughput": {
+      "tokens_per_sec": 63
+    },
+    "status": "FAIL",
+    "rss_peak_mb": 667,
+    "notes": "Reported as 'ANE full' but every layer fell back to CPU after compile failure; the number is a CPU number. Same fp32 root cause as bench kernels. The summary line does not surface the fallback \u2014 read the log.",
+    "log": "logs/bench-inference-ane-m1-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "apps/cli/commands/bench (inference)",
+    "benchmark": "bench_inference_cpu_64_tokens",
+    "command": "./orion bench inference --max_tokens 64",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {
+      "prefill_ms": 16.0,
+      "decode_p50_ms": 15.3,
+      "decode_p90_ms": 15.6,
+      "decode_avg_ms": 15.3
+    },
+    "throughput": {
+      "tokens_per_sec": 65
+    },
+    "status": "PASS",
+    "rss_peak_mb": 653,
+    "notes": "Explicit CPU baseline. Within noise of the '--ane' run above, which is what proves that run was CPU.",
+    "log": "logs/bench-inference-cpu-m1-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:19:44Z",
+    "machine": "Noel's MBP 16\" M1 Pro",
+    "chip": "Apple M1 Pro",
+    "hw_model": "MacBookPro18,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 16,
+    "os_version": "15.7.5",
+    "git_commit": "1a629ac",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "apps/cli/commands/bench (swap)",
+    "benchmark": "bench_swap_100_iters",
+    "command": "./orion bench swap --weights_a A --weights_b B --iters 100",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {},
+    "throughput": {},
+    "status": "FAIL",
+    "rss_peak_mb": 5,
+    "notes": "Compile failed at iteration 0 on every bucket tried (32/64/128/256). Same fp32 program-I/O root cause. No RSS-growth or evict-stability data obtainable on M1 until that is fixed.",
+    "log": "logs/bench-swap-m1-pro.log"
+  }
+]

@@ -1,0 +1,164 @@
+Loading tokenizer...
+tokenizer: loaded 50257 vocab, 49992 merges
+Loading weights from model/blobs/gpt2_124m...
+Weights loaded in 194.0 ms
+Prompt: "Hello" → 1 tokens, mode: ANE full
+Warmup: 3 iterations...
+ANE prefill: 1 tokens → bucket 32
+2026-09-06 15:18:28.445 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fad3a0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for prefill_attn L0
+ANE prefill: attention L0 failed
+2026-09-06 15:18:28.469 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fad490 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.492 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x102704f80 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.516 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eae050 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.539 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fa7660 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.562 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eae650 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+ANE prefill: 1 tokens → bucket 32
+2026-09-06 15:18:28.597 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132faf2a0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for prefill_attn L0
+ANE prefill: attention L0 failed
+2026-09-06 15:18:28.621 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb1200 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.644 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb2bb0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.667 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x102706e50 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.692 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eae010 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.717 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eaecd0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+ANE prefill: 1 tokens → bucket 32
+2026-09-06 15:18:28.755 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eaf7f0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for prefill_attn L0
+ANE prefill: attention L0 failed
+2026-09-06 15:18:28.778 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eb2830 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.801 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb20b0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.825 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb31b0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.848 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb5390 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+2026-09-06 15:18:28.873 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb4fe0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+Timed run: generating 64 tokens...
+ANE prefill: 1 tokens → bucket 32
+2026-09-06 15:18:28.908 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x122eb24e0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/CB8B0262EFE65E3E5CC7432B8E5CB9EC0295618F1E67F527BF22576B73889AA9_C20CD334A0BDF602C960FADF000EC339DCB93A97DBA61F91EC5D2CE80F561854_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for prefill_attn L0
+ANE prefill: attention L0 failed
+ANE prefill failed, falling back to CPU
+2026-09-06 15:18:28.987 orion[6278:63770] ANE compile error: Error Domain=com.apple.appleneuralengine.compiler Code=1 "_ANECompiler : ANECCompile() FAILED" UserInfo={NSLocalizedDescription=_ANECompiler : ANECCompile() FAILED, NSUnderlyingError=0x132fb7dc0 {Error Domain=com.apple.appleneuralengine.compiler Code=1 "ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)" UserInfo={NSLocalizedDescription=ANECCompile(/var/folders/dh/ypr5rkgn3b9fzlzlmj69yd_r0000gn/T/A2C371E4CA5555FDA76F92DFA6275D20CEC700DFC96662B5AA734F0397C12137_53AD8EB2A181092C96679B4771B8E6E0A171565A9ACACBE374C26D1845EF4FC0_E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855/) FAILED: err=(
+    CompilationFailure
+)}}}
+orion_kernel_compile: compile failed for decode_proj L0
+ANE decode: proj L0 failed
+ANE decode failed at step 0, falling back to CPU
+
+=== Inference Benchmark (GPT-2 124M, 64 tokens, ANE full) ===
+  Prefill:     83.6 ms (1 tokens)
+  Decode p50:  15.4 ms
+  Decode p90:  15.9 ms
+  Decode avg:  15.8 ms
+  Throughput:  63 tok/s
+  Generated:   64 tokens
+  RSS:         667 MB
+
+No baseline found. Run with --save-baseline first.

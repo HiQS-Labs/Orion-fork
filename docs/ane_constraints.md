@@ -300,6 +300,50 @@ conv + bias + pow  -> 7 conv (14 blobs)
 
 ---
 
+## 18. fp32 Program I/O Rejected on M1-Generation ANE
+
+**What happens:** A program whose `func main` inputs or outputs are declared `fp32` fails to compile on an M1-generation Neural Engine with `ANECCompile() FAILED` / `CompilationFailure`. The same program with `fp16` I/O compiles. Internal `cast` to and from fp16 does not help — the rejection is at the program boundary, not in the body.
+
+This is an **ANE-generation difference**, not a MIL-validity problem — the same text compiles on the M4 the upstream code was written against.
+
+**Blast radius on M1 is the entire GPT-2 inference path, not just one benchmark.** Every GPT-2 frontend declares fp32 program input (`compiler/frontends/gpt2_final.h` documents it in as many words: `Input: fp32 [1, d_model, 1, bucket]`), so on an M1 Pro all five inference kernels — `prefill_attn`, `prefill_ffn`, `final_ln`, `decode_proj`, `decode_ffn` — fail to compile, `./orion bench kernels` produces no rows at all, and `./orion infer --ane` silently falls back to CPU for every layer. The synthetic program in `bench_swap` fails for the same reason.
+
+The **Stories110M training path is unaffected** and works normally on M1, because its kernels are fp16 `[1,C,1,S]` end to end via `core/iosurface_tensor`. That asymmetry — training fine, inference dead — is the single most important thing to know about running this repo on M1-generation hardware.
+
+**Symptom:** on an M1 Pro, `./orion bench swap` fails at iteration 0 on every bucket (32/64/128/256), and `./orion bench kernels` reports `COMPILE FAILED` for all five kernels:
+
+```
+bench swap: compile failed at iter 0
+  prefill_attn_L0       COMPILE FAILED
+  prefill_ffn_L0        COMPILE FAILED
+  final_ln              COMPILE FAILED
+  decode_proj_L0        COMPILE FAILED
+  decode_ffn_L0         COMPILE FAILED
+ANE compile error: ... _ANECompiler : ANECCompile() FAILED ... err=(CompilationFailure)
+```
+
+`./orion bench inference --ane` does *not* report failure in its summary — it prints `mode: ANE full` and a throughput number produced entirely by the CPU fallback (63 tok/s, against 65 tok/s for the explicit CPU run). Do not read an `--ane` inference number on M1 as an ANE number without checking the log for `falling back to CPU`.
+
+**Workaround:** declare program I/O `fp16` and cast on the host side. Note this interacts with #14 — the ANE reads the flat IOSurface as packed shape data, so the host buffer element size must change with the declared dtype.
+
+**Verification:** isolated on M1 Pro (MacBookPro18,1), macOS 15.7.5, by compiling one MIL program twice with only the I/O dtype varied and everything else byte-identical:
+
+```
+io_dtype=fp32  -> FAILED
+io_dtype=fp16  -> COMPILED
+```
+
+The generated MIL for a failing kernel confirms where the fp32 enters — it is the function signature, not the body, which is already fp16:
+
+```
+func main<ios18>(tensor<fp32, [1,768,1,64]> x) {
+    tensor<fp16, [1,768,1,1]> lnf_g = const()[...];
+```
+
+**Discovered:** Orion-fork Phase 1 ANE spike, 2026-09-06 ([#1](https://github.com/HiQS-Labs/Orion-fork/issues/1)). Confirmed on M1 Pro. **Not yet checked on M4** — the M1 Max and M4 Pro legs of that campaign will establish whether this is M1-only or applies more widely.
+
+---
+
 ## Quick Reference Table
 
 | # | Constraint | Severity | Symptom | Source |
@@ -321,3 +365,4 @@ conv + bias + pow  -> 7 conv (14 blobs)
 | 15 | Max 16 BLOBFILE weights (bias included) | Compile fail | `InvalidMILProgram` | tyrauber |
 | 16 | Scalar-operand ops cost a slot | Compile fail | `InvalidMILProgram` at 16 | tyrauber |
 | 17 | No `rsqrt` op | Compile fail | `InvalidMILProgram` | tyrauber |
+| 18 | fp32 program I/O rejected on M1 ANE | Compile fail (all GPT-2 inference) | `ANECCompile() FAILED` | Orion |

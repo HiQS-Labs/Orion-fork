@@ -1,0 +1,55 @@
+Creating trainer from model/blobs/stories110m_train...
+Trainer created in 10154.4 ms
+
+=== Training Benchmark (Stories110M, 20 steps, grad_accum=4) ===
+  Step        Fwd ms   Bwd+dW ms     Adam ms    Total ms      Loss
+2026-09-06 15:14:39.643 orion[5941:59136] Delta: save=483.9ms patch=433.9ms total=917.9ms
+     1       505.6       758.4       102.8      2286.0    10.7436
+2026-09-06 15:14:41.859 orion[5941:59136] Delta: save=508.7ms patch=372.1ms total=880.8ms
+     2       499.0       748.4        68.7      2197.0    10.1863
+2026-09-06 15:14:44.014 orion[5941:59136] Delta: save=475.2ms patch=370.5ms total=845.8ms
+     3       498.7       748.0        50.7      2143.3    9.6163
+2026-09-06 15:14:46.181 orion[5941:59136] Delta: save=478.9ms patch=375.7ms total=854.6ms
+     4       499.3       749.0        51.5      2154.5    9.0739
+2026-09-06 15:14:48.410 orion[5941:59136] Delta: save=499.2ms patch=371.9ms total=871.1ms
+     5       517.3       775.9        52.4      2216.8    8.5306
+2026-09-06 15:14:50.606 orion[5941:59136] Delta: save=481.0ms patch=387.3ms total=868.3ms
+     6       505.7       758.6        50.6      2183.3    8.0005
+2026-09-06 15:14:52.753 orion[5941:59136] Delta: save=474.7ms patch=376.9ms total=851.6ms
+     7       493.0       739.5        50.7      2135.0    7.5105
+2026-09-06 15:14:54.970 orion[5941:59136] Delta: save=498.4ms patch=381.0ms total=879.5ms
+     8       509.6       764.4        50.7      2204.4    7.0468
+2026-09-06 15:14:57.148 orion[5941:59136] Delta: save=477.9ms patch=381.6ms total=859.5ms
+     9       502.1       753.1        50.7      2165.6    6.6423
+2026-09-06 15:14:59.332 orion[5941:59136] Delta: save=488.7ms patch=386.6ms total=875.3ms
+    10       498.0       746.9        50.6      2170.9    6.3207
+2026-09-06 15:15:01.521 orion[5941:59136] Delta: save=504.3ms patch=376.0ms total=880.3ms
+    11       498.5       747.8        50.7      2177.5    6.0729
+2026-09-06 15:15:03.654 orion[5941:59136] Delta: save=472.0ms patch=364.2ms total=836.2ms
+    12       493.2       739.7        50.6      2119.9    5.9040
+2026-09-06 15:15:05.793 orion[5941:59136] Delta: save=474.8ms patch=363.7ms total=838.5ms
+    13       494.7       742.1        51.5      2127.0    5.7909
+2026-09-06 15:15:07.906 orion[5941:59136] Delta: save=469.4ms patch=375.2ms total=844.5ms
+    14       482.1       723.2        50.9      2100.8    5.7196
+2026-09-06 15:15:10.063 orion[5941:59136] Delta: save=496.6ms patch=374.4ms total=871.0ms
+    15       489.3       733.9        50.6      2144.9    5.6747
+2026-09-06 15:15:12.219 orion[5941:59136] Delta: save=473.2ms patch=364.8ms total=838.1ms
+    16       501.5       752.2        50.8      2142.6    5.6462
+2026-09-06 15:15:14.349 orion[5941:59136] Delta: save=467.9ms patch=373.8ms total=841.8ms
+    17       489.4       734.1        52.2      2117.7    5.6275
+2026-09-06 15:15:16.518 orion[5941:59136] Delta: save=497.2ms patch=374.0ms total=871.1ms
+    18       494.2       741.2        50.6      2157.2    5.6164
+2026-09-06 15:15:18.648 orion[5941:59136] Delta: save=469.2ms patch=371.1ms total=840.3ms
+    19       490.7       736.0        50.7      2117.8    5.6081
+2026-09-06 15:15:20.792 orion[5941:59136] Delta: save=471.5ms patch=376.8ms total=848.4ms
+    20       492.5       738.8        50.7      2130.5    5.6028
+
+  --- Summary ---
+  Avg forward:   497.7 ms
+  Avg bwd+dW:    746.6 ms
+  Avg Adam:      54.4 ms
+  Avg recompile: 860.9 ms
+  Avg total:     2159.6 ms/step
+  RSS:           2371 MB
+
+No baseline found. Run with --save-baseline first.
