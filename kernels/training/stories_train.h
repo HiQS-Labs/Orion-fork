@@ -164,8 +164,10 @@ void orion_trainer_scale_grads(OrionTrainer* trainer, float scale);
 bool orion_trainer_recompile(OrionTrainer* trainer, const char* weight_path);
 
 /// Delta-recompile: patch weights into existing compiled programs without
-/// recompilation. Uses orion_program_patch_weights to skip the ANE compiler
-/// entirely. Falls back to full recompile if any patch fails.
+/// recompilation. Saves updated weights to disk, then uses
+/// orion_program_reload_weights to skip the ANE compiler entirely — applied to
+/// 5 of the 6 per-layer programs (sdpa_bwd2 has no weights and is left as-is).
+/// Falls back to full recompile if any patch fails.
 /// Does NOT increment orion_compile_count() on success.
 bool orion_trainer_recompile_delta(OrionTrainer* trainer, const char* weight_path);
 
