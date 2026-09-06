@@ -178,12 +178,9 @@ and `train.m` only go through the pre-wired kernel adapters in `kernels/inferenc
   `lora.c` and `stories_train.c` are the largest frontends and likely worth a follow-up pass.
   `compiler/patterns.c` was only read up to its attention-pattern head.
   What `compiler/pass_ane_validate.c` specifically checks (only its scaffolding was read).
-- **Stale doc comment in the source:** `kernels/training/stories_train.h:166-167` says
-  delta-recompile "Uses `orion_program_patch_weights`," but the implementation
-  (`patch_layer`, `stories_train.m:993-1023`) calls `orion_program_reload_weights` — a different
-  primitive. Either the comment is stale or the implementation drifted; worth reconciling.
-  `orion_program_patch_weights` still exists in `core/ane_runtime.m` — who its live callers are
-  was not traced.
+- `orion_program_patch_weights` still exists in `core/ane_runtime.m`, but the training delta path
+  does not use it (`patch_layer`, `stories_train.m:993-1023`, calls `orion_program_reload_weights`).
+  Who its live callers are was not traced — possibly another dead path.
 - Whether the full-recompile fallback (`orion_trainer_recompile`, wired at
   `stories_train.m:1042`) is ever actually taken in practice, or only on a patch failure that
   never occurs.
