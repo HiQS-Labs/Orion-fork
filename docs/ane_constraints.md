@@ -304,7 +304,7 @@ conv + bias + pow  -> 7 conv (14 blobs)
 
 **What happens:** A program whose `func main` inputs or outputs are declared `fp32` fails to compile on an M1-generation Neural Engine with `ANECCompile() FAILED` / `CompilationFailure`. The same program with `fp16` I/O compiles. Internal `cast` to and from fp16 does not help — the rejection is at the program boundary, not in the body.
 
-This is an **ANE-generation difference**, not a MIL-validity problem — the same text compiles on the M4 the upstream code was written against.
+This is an **ANE-generation difference**, not a MIL-validity problem — the same text compiles on the M4 the upstream code was written against. **Confirmed by direct measurement on 2026-09-06**, not merely inferred: on an M4 Pro (Mac16,8, macOS 15.6) all five GPT-2 kernels compile with the fp32 I/O unchanged, and `bench swap` runs 100/100 compile-evict cycles — the exact configuration that fails on all five kernels and at swap iteration 0 on M1 Pro.
 
 **Blast radius on M1 is the entire GPT-2 inference path, not just one benchmark.** Every GPT-2 frontend declares fp32 program input (`compiler/frontends/gpt2_final.h` documents it in as many words: `Input: fp32 [1, d_model, 1, bucket]`), so on an M1 Pro all five inference kernels — `prefill_attn`, `prefill_ffn`, `final_ln`, `decode_proj`, `decode_ffn` — fail to compile, `./orion bench kernels` produces no rows at all, and `./orion infer --ane` silently falls back to CPU for every layer. The synthetic program in `bench_swap` fails for the same reason.
 
@@ -340,7 +340,22 @@ func main<ios18>(tensor<fp32, [1,768,1,64]> x) {
     tensor<fp16, [1,768,1,1]> lnf_g = const()[...];
 ```
 
-**Discovered:** Orion-fork Phase 1 ANE spike, 2026-09-06 ([#1](https://github.com/HiQS-Labs/Orion-fork/issues/1)). Confirmed on M1 Pro. **Not yet checked on M4** — the M1 Max and M4 Pro legs of that campaign will establish whether this is M1-only or applies more widely.
+**Cross-generation confirmation (M4 Pro, Mac16,8, macOS 15.6, 2026-09-06).** The same binary, the
+same fp32 program I/O, the same commit — all five kernels compile:
+
+```
+prefill_attn_L0    compile  88.53 ms    eval avg 0.1490 ms    SRAM ~23.3 MB
+prefill_ffn_L0     compile  87.33 ms    eval avg 0.1942 ms    SRAM ~18.4 MB
+final_ln           compile  44.89 ms    eval avg 0.0939 ms    SRAM ~0.4 MB
+decode_proj_L0     compile  60.33 ms    eval avg 0.1184 ms    SRAM ~7.0 MB
+decode_ffn_L0      compile  87.70 ms    eval avg 0.1808 ms    SRAM ~18.1 MB
+```
+
+So the constraint is **M1-generation-specific**. The fix remains the fp16 workaround above, because
+one codebase has to run on both — but it is a bounded compatibility fix, not a correction to
+something universally wrong.
+
+**Discovered:** Orion-fork Phase 1 ANE spike, 2026-09-06 ([#1](https://github.com/HiQS-Labs/Orion-fork/issues/1)). Confirmed failing on M1 Pro, confirmed **passing** on M4 Pro. Receipts: `TESTS-RESULTS/2026-09-06-phase1-ane-spike/`. M1 Max not yet run; it is expected to fail with M1 Pro, but that is a prediction, not a measurement.
 
 ---
 
@@ -365,4 +380,4 @@ func main<ios18>(tensor<fp32, [1,768,1,64]> x) {
 | 15 | Max 16 BLOBFILE weights (bias included) | Compile fail | `InvalidMILProgram` | tyrauber |
 | 16 | Scalar-operand ops cost a slot | Compile fail | `InvalidMILProgram` at 16 | tyrauber |
 | 17 | No `rsqrt` op | Compile fail | `InvalidMILProgram` | tyrauber |
-| 18 | fp32 program I/O rejected on M1 ANE | Compile fail (all GPT-2 inference) | `ANECCompile() FAILED` | Orion |
+| 18 | fp32 program I/O rejected on M1 ANE (M4 accepts it) | Compile fail (all GPT-2 inference) | `ANECCompile() FAILED` | Orion |

@@ -1,0 +1,44 @@
+Loading tokenizer...
+tokenizer: loaded 50257 vocab, 49992 merges
+Loading weights from model/blobs/gpt2_124m...
+Weights loaded in 145.8 ms
+Prompt: "Hello" → 1 tokens, mode: ANE full
+Warmup: 3 iterations...
+ANE prefill: 1 tokens → bucket 32
+ANE prefill: 25 new compiles (25 programs cached, 25 compiles total)
+ANE prefill: 1 tokens → bucket 32
+ANE prefill: 0 new compiles (49 programs cached, 49 compiles total)
+ANE prefill: 1 tokens → bucket 32
+ANE prefill: 0 new compiles (49 programs cached, 49 compiles total)
+Timed run: generating 64 tokens...
+ANE prefill: 1 tokens → bucket 32
+ANE prefill: 0 new compiles (49 programs cached, 49 compiles total)
+
+=== Inference Benchmark (GPT-2 124M, 64 tokens, ANE full) ===
+  Prefill:     6.9 ms (1 tokens)
+  Decode p50:  6.3 ms
+  Decode p90:  6.5 ms
+  Decode avg:  6.3 ms
+  Throughput:  160 tok/s
+  Generated:   64 tokens
+  RSS:         754 MB
+
+No baseline found. Run with --save-baseline first.
+        4.24 real         0.40 user         0.44 sys
+           791085056  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               60831  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                1167  voluntary context switches
+                3394  involuntary context switches
+          7413853514  instructions retired
+          3278922686  cycles elapsed
+           646038584  peak memory footprint

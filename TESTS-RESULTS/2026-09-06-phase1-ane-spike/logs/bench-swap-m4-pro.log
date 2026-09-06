@@ -1,0 +1,47 @@
+bench swap: 100 iterations, bucket=64, compiles=0
+  weights_a: A
+  weights_b: B
+  RSS start: 4.7 MB
+
+  iter    1/100 | MISS | compile 37.6 ms | eval 0.2 ms | cache 1 | compiles 1 | RSS 6.3 MB
+  iter   10/100 | MISS | compile 9.0 ms | eval 0.2 ms | cache 1 | compiles 10 | RSS 7.0 MB
+  iter   20/100 | MISS | compile 8.8 ms | eval 0.2 ms | cache 1 | compiles 20 | RSS 7.0 MB
+  iter   30/100 | MISS | compile 8.8 ms | eval 0.2 ms | cache 1 | compiles 30 | RSS 7.1 MB
+  iter   40/100 | MISS | compile 8.4 ms | eval 0.2 ms | cache 1 | compiles 40 | RSS 7.1 MB
+  iter   50/100 | MISS | compile 8.7 ms | eval 0.2 ms | cache 1 | compiles 50 | RSS 7.1 MB
+  iter   60/100 | MISS | compile 8.9 ms | eval 0.2 ms | cache 1 | compiles 60 | RSS 7.1 MB
+  iter   70/100 | MISS | compile 8.4 ms | eval 0.2 ms | cache 1 | compiles 70 | RSS 7.1 MB
+  iter   80/100 | MISS | compile 8.8 ms | eval 0.2 ms | cache 1 | compiles 80 | RSS 7.1 MB
+  iter   90/100 | MISS | compile 8.2 ms | eval 0.2 ms | cache 1 | compiles 90 | RSS 7.1 MB
+  iter  100/100 | MISS | compile 8.4 ms | eval 0.2 ms | cache 1 | compiles 100 | RSS 7.1 MB
+
+=== bench swap results ===
+  iterations:      100
+  compiles:        100 (of 100 total process)
+  avg compile:     9.13 ms
+  avg eval:        0.19 ms
+  avg evict:       0.46 ms
+  RSS start:       4.7 MB
+  RSS end:         7.1 MB
+  RSS ratio:       1.52x
+  status:          PASS
+
+No baseline found. Run with --save-baseline first.
+        0.98 real         0.04 user         0.09 sys
+             7471104  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                 910  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 200  voluntary context switches
+                1216  involuntary context switches
+          1546548321  instructions retired
+           515539679  cycles elapsed
+             3555712  peak memory footprint

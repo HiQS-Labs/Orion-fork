@@ -1,0 +1,36 @@
+Loading tokenizer...
+tokenizer: loaded 50257 vocab, 49992 merges
+Loading weights from model/blobs/gpt2_124m...
+Weights loaded in 46.6 ms
+Prompt: "Hello" → 1 tokens, mode: CPU only
+Warmup: 3 iterations...
+Timed run: generating 64 tokens...
+
+=== Inference Benchmark (GPT-2 124M, 64 tokens, CPU only) ===
+  Prefill:     4.1 ms (1 tokens)
+  Decode p50:  3.9 ms
+  Decode p90:  4.0 ms
+  Decode avg:  3.9 ms
+  Throughput:  255 tok/s
+  Generated:   64 tokens
+  RSS:         641 MB
+
+No baseline found. Run with --save-baseline first.
+        0.45 real         0.44 user         0.06 sys
+           672677888  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41295  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 316  involuntary context switches
+          2488785106  instructions retired
+          1839961877  cycles elapsed
+           542409640  peak memory footprint

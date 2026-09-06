@@ -1,0 +1,260 @@
+[
+  {
+    "timestamp": "2026-09-06T22:36:00Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "compiler (hardware-free suites)",
+    "benchmark": "make_test_compiler",
+    "command": "make test-compiler",
+    "wall_clock_seconds": 1.27,
+    "timing_breakdown": {},
+    "throughput": {},
+    "status": "PASS",
+    "notes": "4/4 suites green: graph IR, passes, ANE passes, compiler equivalence. Matches M1 Pro. Needs no weights and no ANE.",
+    "log": "logs/test-compiler-m4-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:41:00Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "kernels/training/stories_train",
+    "benchmark": "train_50_steps_delta",
+    "command": "./orion train --weights model/blobs/stories110m_train --dataset data/tinystories_data00.bin --steps 50 --checkpoint_every 25",
+    "wall_clock_seconds": 143.01,
+    "timing_breakdown": {
+      "init_compile_ms": 3900.0,
+      "avg_train_ms": 2206.6,
+      "avg_recompile_ms": 542.6,
+      "avg_total_step_ms": 2762.4,
+      "delta_save_ms_avg": 349.4,
+      "delta_patch_ms_avg": 193.1,
+      "delta_total_ms_min": 507.2,
+      "delta_total_ms_max": 615.5,
+      "delta_total_ms_avg": 542.5
+    },
+    "throughput": {
+      "tflops": 0.631
+    },
+    "compile_count_start": 0,
+    "compile_count_end": 72,
+    "programs_compiled_at_startup": 72,
+    "weight_kernels_patched": 60,
+    "delta_path_taken": true,
+    "rss_peak_mb": 2924,
+    "loss_first_step": 12.2326,
+    "loss_final_step": 10.4402,
+    "status": "PASS",
+    "notes": "50/50 steps took the delta path; zero fallbacks, zero restarts, compile count flat at 72 after startup. grad_accum defaulted to 10. Run twice from pristine weights and produced an identical final loss of 10.4402 both times, so the run is deterministic. Delta patch 1.54x faster than M1 Pro (542.5 vs 837.7 ms), startup compile 2.8x faster (3.9 s vs 11.1 s).",
+    "log": "logs/train-m4-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:45:00Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "kernels/training/stories_train",
+    "benchmark": "bench_training_20_steps",
+    "command": "./orion bench training --steps 20 --weights model/blobs/stories110m_train",
+    "wall_clock_seconds": 33.29,
+    "timing_breakdown": {
+      "trainer_create_ms": 3973.4,
+      "avg_forward_ms": 341.1,
+      "avg_bwd_dw_ms": 511.7,
+      "avg_adam_ms": 35.5,
+      "avg_recompile_ms": 537.4,
+      "avg_total_step_ms": 1425.7
+    },
+    "throughput": {},
+    "delta_path_taken": true,
+    "rss_peak_mb": 2388,
+    "status": "PASS",
+    "notes": "grad_accum=4 here (bench default), against 10 for the train subcommand, which is why avg_total_step_ms is far below the train run's. Zero delta fallbacks. NOTE: the issue's Step 4 command omits --weights, and bench training then defaults to model/blobs/stories110m and mutates the pristine reference blobs in place. Ran once that way by following the issue verbatim; pristine blobs were re-converted and the run redone against the training copy. See finding 3 in SUMMARY.md.",
+    "log": "logs/bench-training-m4-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:42:00Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "kernels/inference (GPT-2 124M)",
+    "benchmark": "bench_kernels_gpt2_50_iters",
+    "command": "./orion bench kernels --iters 50",
+    "wall_clock_seconds": 0.43,
+    "timing_breakdown": {
+      "prefill_attn_L0_compile_ms": 88.53,
+      "prefill_ffn_L0_compile_ms": 87.33,
+      "final_ln_compile_ms": 44.89,
+      "decode_proj_L0_compile_ms": 60.33,
+      "decode_ffn_L0_compile_ms": 87.7,
+      "prefill_attn_L0_eval_avg_ms": 0.149,
+      "prefill_ffn_L0_eval_avg_ms": 0.1942,
+      "final_ln_eval_avg_ms": 0.0939,
+      "decode_proj_L0_eval_avg_ms": 0.1184,
+      "decode_ffn_L0_eval_avg_ms": 0.1808
+    },
+    "throughput": {},
+    "sram_est_mb": {
+      "prefill_attn_L0": 23.3,
+      "prefill_ffn_L0": 18.4,
+      "final_ln": 0.4,
+      "decode_proj_L0": 7.0,
+      "decode_ffn_L0": 18.1,
+      "total_working_set": 67.1
+    },
+    "rss_peak_mb": 35,
+    "status": "PASS",
+    "notes": "THE DECISIVE RESULT FOR #2. All five GPT-2 inference kernels compile on M4-generation ANE with fp32 program I/O unchanged — the exact configuration that fails on all five kernels on M1 Pro. Constraint #18 is therefore M1-generation-specific, not universal. Separately: 'WARNING: Total working set ~67.1 MB exceeds 32 MB SRAM' — a real Phase 3 signal, not an error.",
+    "log": "logs/kernels-m4-pro.jsonl"
+  },
+  {
+    "timestamp": "2026-09-06T22:43:00Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "kernels/inference (GPT-2 124M, ANE full)",
+    "benchmark": "bench_inference_ane_64_tokens",
+    "command": "./orion bench inference --ane --max_tokens 64",
+    "wall_clock_seconds": 4.24,
+    "timing_breakdown": {
+      "prefill_ms": 6.9,
+      "decode_p50_ms": 6.3,
+      "decode_p90_ms": 6.5,
+      "decode_avg_ms": 6.3
+    },
+    "throughput": {
+      "tokens_per_sec": 160
+    },
+    "programs_compiled": 49,
+    "rss_peak_mb": 754,
+    "status": "PASS",
+    "notes": "Genuine ANE execution, unlike M1 Pro: 49 programs compiled and cached, zero CPU-fallback lines in the log. But it is SLOWER than the CPU path on the same machine — 160 tok/s against 255 tok/s, a 0.63x ratio. ANE inference works on M4 and is not worth using at this batch/shape for single-token decode.",
+    "log": "logs/bench-inference-ane-m4-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:44:00Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "kernels/inference (GPT-2 124M, CPU only)",
+    "benchmark": "bench_inference_cpu_64_tokens",
+    "command": "./orion bench inference --max_tokens 64",
+    "wall_clock_seconds": 0.45,
+    "timing_breakdown": {
+      "prefill_ms": 4.1,
+      "decode_p50_ms": 3.9,
+      "decode_p90_ms": 4.0,
+      "decode_avg_ms": 3.9
+    },
+    "throughput": {
+      "tokens_per_sec": 255
+    },
+    "rss_peak_mb": 641,
+    "status": "PASS",
+    "notes": "The CPU oracle AGENTS.md requires of any ANE claim. 255 tok/s here beats the 160 tok/s ANE run on the same machine, and is ~3.9x the 65 tok/s M1 Pro CPU baseline.",
+    "log": "logs/bench-inference-cpu-m4-pro.log"
+  },
+  {
+    "timestamp": "2026-09-06T22:45:30Z",
+    "machine": "noel's MacBook Pro 14\"",
+    "chip": "Apple M4 Pro",
+    "hw_model": "Mac16,8",
+    "cores": {
+      "total": 12,
+      "performance": 8,
+      "efficiency": 4,
+      "ane": 16
+    },
+    "memory_gb": 24,
+    "os_version": "15.6",
+    "git_commit": "f9e9f93",
+    "branch": "main",
+    "ane_generation": "M4",
+    "target": "core/ane_program_cache (synthetic add program)",
+    "benchmark": "bench_swap_100_iters",
+    "command": "./orion bench swap --weights_a A --weights_b B --iters 100",
+    "wall_clock_seconds": 0.98,
+    "timing_breakdown": {
+      "avg_compile_ms": 9.13,
+      "avg_eval_ms": 0.19,
+      "avg_evict_ms": 0.46,
+      "first_compile_ms": 37.6
+    },
+    "throughput": {},
+    "compile_count_end": 100,
+    "rss_start_mb": 4.7,
+    "rss_end_mb": 7.1,
+    "rss_ratio": 1.52,
+    "rss_peak_mb": 7,
+    "status": "PASS",
+    "notes": "Passes on M4 where it failed at iter 0 on M1 Pro with ANECCompile CompilationFailure — same fp32 program-I/O story as the GPT-2 kernels. 100 compile/evict cycles with no leak: RSS climbed 4.7 -> 7.1 MB and then held flat from iter 30 onward, so the 1.52x ratio is startup allocation, not per-cycle growth. Closest available proxy for the Phase 3 LoRA hot-swap path.",
+    "log": "logs/bench-swap-m4-pro.log"
+  }
+]

@@ -1,0 +1,5 @@
+{"kernel":"prefill_attn_L0","compile_ms":88.53,"eval_min_ms":0.1211,"eval_p50_ms":0.1428,"eval_p90_ms":0.1699,"eval_avg_ms":0.1490,"sram_est_mb":23.3}
+{"kernel":"prefill_ffn_L0","compile_ms":87.33,"eval_min_ms":0.1711,"eval_p50_ms":0.1851,"eval_p90_ms":0.2300,"eval_avg_ms":0.1942,"sram_est_mb":18.4}
+{"kernel":"final_ln","compile_ms":44.89,"eval_min_ms":0.0710,"eval_p50_ms":0.0850,"eval_p90_ms":0.1328,"eval_avg_ms":0.0939,"sram_est_mb":0.4}
+{"kernel":"decode_proj_L0","compile_ms":60.33,"eval_min_ms":0.0950,"eval_p50_ms":0.1160,"eval_p90_ms":0.1440,"eval_avg_ms":0.1184,"sram_est_mb":7.0}
+{"kernel":"decode_ffn_L0","compile_ms":87.70,"eval_min_ms":0.1621,"eval_p50_ms":0.1770,"eval_p90_ms":0.2109,"eval_avg_ms":0.1808,"sram_est_mb":18.1}

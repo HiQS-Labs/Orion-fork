@@ -1,0 +1,29 @@
+=== Kernel Benchmark (GPT-2 124M, 50 iters, bucket 64) ===
+  Kernel                 Compile    Eval min    Eval p50    Eval p90    Eval avg    SRAM est
+  prefill_attn_L0           89ms      0.12ms      0.14ms      0.17ms      0.15ms    ~23.3MB
+  prefill_ffn_L0            87ms      0.17ms      0.19ms      0.23ms      0.19ms    ~18.4MB
+  final_ln                  45ms      0.07ms      0.08ms      0.13ms      0.09ms    ~0.4MB
+  decode_proj_L0            60ms      0.09ms      0.12ms      0.14ms      0.12ms    ~7.0MB
+  decode_ffn_L0             88ms      0.16ms      0.18ms      0.21ms      0.18ms    ~18.1MB
+  RSS: 35 MB
+  WARNING: Total working set ~67.1 MB exceeds 32 MB SRAM
+
+No baseline found. Run with --save-baseline first.
+        0.43 real         0.01 user         0.03 sys
+            36618240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                2499  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 110  voluntary context switches
+                 384  involuntary context switches
+           492579923  instructions retired
+           203726009  cycles elapsed
+            31342976  peak memory footprint
