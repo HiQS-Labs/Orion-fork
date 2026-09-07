@@ -225,9 +225,15 @@ so machine 1 evidently hit or anticipated this, but the issue text was never cor
 
 Fix is one flag in the issue's Step 4. Worth doing before the M1 Max run.
 
-*Followed on the M1 Max run: it passed `--weights model/blobs/stories110m_train` explicitly, and
-the pristine blobs were verified untouched by mtime afterwards. The issue's Step 4 text is still
-uncorrected.*
+**Resolved.** Step 4 was corrected on 2026-09-06 — it now passes
+`--weights model/blobs/stories110m_train` and carries a ⚠️ callout explaining why the flag is not
+optional. The M1 Max run followed the corrected text, and its pristine blobs were verified
+untouched by mtime afterwards, so the fix is confirmed working by the machine it was written for.
+
+*(An earlier revision of this paragraph, and the M1 Max issue comment, both claimed Step 4 was
+"still uncorrected." That was wrong — written from this finding's original wording without
+re-reading the live issue. Corrected here rather than silently deleted, because the campaign's own
+rule is that a wrong number gets a correction, not an edit.)*
 
 ### 7. The M1 Max host was contended, and the campaign has no way to say by how much
 
