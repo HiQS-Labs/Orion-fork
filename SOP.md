@@ -26,6 +26,24 @@ immediately.
   fuzz loop, or anything that mutates model weights/checkpoints on disk in the working tree you're
   actively editing. Use a separate clone, or at minimum a scratch directory outside the repo for
   generated artifacts (checkpoints, temp weight files).
+- **Check the host is quiet before a measured run.** Takes seconds, and skipping it cost the
+  Phase 1 campaign a whole M1 Max leg that had to be re-run:
+
+  ```bash
+  uptime                              # want the 1-min load well under core count
+  ps -Ao %cpu,etime,comm -r | head -5 # want nothing unexpected above ~10%
+  ```
+
+  Two traps this catches. First, a headless background job has no window — the run that was
+  spoiled sat behind a Python process that had been pinning a core for 2 days 21 hours, which
+  "close your apps" would never have found. Second, **a freshly rebooted machine is the opposite
+  of quiet**: Spotlight, Apple asset downloads, cloud backup and Time Machine all start at boot,
+  and load was measured at **174** five minutes after a reboot, decaying to under 4 only after
+  ~29 minutes. Reboot then measure immediately is worse than not rebooting.
+
+  The most sensitive symptom is *spread*, not the mean: per-step timings that ranged 92% under
+  contention ranged 16% on the same machine when quiet. If a benchmark's per-iteration numbers
+  are drifting widely, suspect the host before the code.
 - **File confirmed defects immediately.** When a benchmark or test run turns up a real,
   reproducible defect — an ANE constraint violation, a golden-output mismatch, a perf regression
   against a recorded baseline — open the GitHub issue right away rather than sitting on it; filing

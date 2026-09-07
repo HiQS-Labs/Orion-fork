@@ -1,0 +1,73 @@
+Creating trainer from model/blobs/stories110m_train...
+Trainer created in 9481.2 ms
+
+=== Training Benchmark (Stories110M, 20 steps, grad_accum=4) ===
+  Step        Fwd ms   Bwd+dW ms     Adam ms    Total ms      Loss
+2026-09-06 23:17:15.186 orion[13410:1640316] Delta: save=446.1ms patch=409.6ms total=855.7ms
+     1       523.4       785.1        61.0      2225.6    10.7436
+2026-09-06 23:17:17.180 orion[13410:1640316] Delta: save=475.0ms patch=358.6ms total=833.6ms
+     2       442.0       663.0        43.9      1982.7    10.1863
+2026-09-06 23:17:19.119 orion[13410:1640316] Delta: save=436.9ms patch=356.1ms total=793.0ms
+     3       435.9       653.8        44.2      1927.0    9.6163
+2026-09-06 23:17:21.182 orion[13410:1640316] Delta: save=436.2ms patch=380.1ms total=816.2ms
+     4       475.8       713.7        45.3      2051.3    9.0739
+2026-09-06 23:17:23.432 orion[13410:1640316] Delta: save=497.2ms patch=371.1ms total=868.2ms
+     5       530.0       795.0        44.7      2238.1    8.5306
+2026-09-06 23:17:25.389 orion[13410:1640316] Delta: save=428.4ms patch=368.7ms total=797.0ms
+     6       440.5       660.7        46.0      1944.4    8.0005
+2026-09-06 23:17:27.333 orion[13410:1640316] Delta: save=427.7ms patch=375.0ms total=802.7ms
+     7       432.3       648.5        46.2      1929.9    7.5105
+2026-09-06 23:17:29.387 orion[13410:1640316] Delta: save=479.2ms patch=382.6ms total=861.8ms
+     8       452.4       678.6        47.0      2040.0    7.0468
+2026-09-06 23:17:31.571 orion[13410:1640316] Delta: save=433.1ms patch=385.9ms total=819.0ms
+     9       522.2       783.2        46.6      2171.1    6.6423
+2026-09-06 23:17:33.502 orion[13410:1640316] Delta: save=425.6ms patch=371.7ms total=797.3ms
+    10       429.9       644.8        46.4      1918.5    6.3207
+2026-09-06 23:17:35.462 orion[13410:1640316] Delta: save=460.9ms patch=377.1ms total=838.0ms
+    11       425.0       637.5        46.3      1947.0    6.0729
+2026-09-06 23:17:37.413 orion[13410:1640316] Delta: save=439.7ms patch=384.3ms total=824.0ms
+    12       426.9       640.4        46.3      1937.7    5.9040
+2026-09-06 23:17:39.557 orion[13410:1640316] Delta: save=434.7ms patch=378.9ms total=813.6ms
+    13       508.9       763.3        46.7      2132.6    5.7909
+2026-09-06 23:17:41.694 orion[13410:1640316] Delta: save=425.0ms patch=386.9ms total=811.9ms
+    14       506.0       759.0        46.2      2123.2    5.7196
+2026-09-06 23:17:43.649 orion[13410:1640316] Delta: save=447.5ms patch=373.8ms total=821.3ms
+    15       429.6       644.5        46.3      1941.8    5.6747
+2026-09-06 23:17:45.591 orion[13410:1640316] Delta: save=427.6ms patch=382.0ms total=809.6ms
+    16       429.4       644.1        46.2      1929.4    5.6462
+2026-09-06 23:17:47.732 orion[13410:1640316] Delta: save=433.6ms patch=377.3ms total=810.9ms
+    17       508.1       762.2        47.3      2128.6    5.6275
+2026-09-06 23:17:49.892 orion[13410:1640316] Delta: save=453.4ms patch=371.6ms total=825.0ms
+    18       510.8       766.2        46.1      2148.2    5.6164
+2026-09-06 23:17:51.817 orion[13410:1640316] Delta: save=427.5ms patch=371.3ms total=798.8ms
+    19       427.0       640.5        46.3      1912.7    5.6081
+2026-09-06 23:17:53.754 orion[13410:1640316] Delta: save=425.5ms patch=374.7ms total=800.2ms
+    20       430.8       646.1        46.4      1923.5    5.6028
+
+  --- Summary ---
+  Avg forward:   464.4 ms
+  Avg bwd+dW:    696.5 ms
+  Avg Adam:      46.8 ms
+  Avg recompile: 820.0 ms
+  Avg total:     2027.7 ms/step
+  RSS:           2334 MB
+
+No baseline found. Run with --save-baseline first.
+       50.49 real        31.25 user         6.17 sys
+          2447343616  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              175124  page reclaims
+                   1  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                4993  voluntary context switches
+               46336  involuntary context switches
+        225095447306  instructions retired
+        112138122772  cycles elapsed
+          2362202048  peak memory footprint

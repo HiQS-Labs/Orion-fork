@@ -1,0 +1,142 @@
+commit fcbf6ea  2026-09-07T06:13:38Z
+23:13  up 35 mins, 1 user, load averages: 4.10 4.68 10.40
+
+Creating trainer (compiling 72 ANE programs)...
+Compiled in 9.4 s
+Dataset: 5070729 tokens, 19807 samples
+
+Training: steps=50, grad_accum=10, lr=3.0e-04, checkpoint_every=25
+
+step    1 | loss 12.2324 | 3136.6 ms | 0.444 TFLOPS
+2026-09-06 23:13:52.357 orion[23525:1502709] Delta: save=453.9ms patch=446.4ms total=900.3ms
+step    2 | loss 12.0409 | 2831.4 ms | 0.492 TFLOPS
+2026-09-06 23:13:56.002 orion[23525:1502709] Delta: save=437.4ms patch=375.5ms total=812.9ms
+step    3 | loss 11.6811 | 3304.2 ms | 0.421 TFLOPS
+2026-09-06 23:14:00.128 orion[23525:1502709] Delta: save=429.5ms patch=392.6ms total=822.1ms
+step    4 | loss 10.7136 | 2827.9 ms | 0.492 TFLOPS
+2026-09-06 23:14:03.796 orion[23525:1502709] Delta: save=458.4ms patch=380.9ms total=839.3ms
+step    5 | loss 11.5649 | 3401.4 ms | 0.409 TFLOPS
+2026-09-06 23:14:08.005 orion[23525:1502709] Delta: save=429.5ms patch=378.8ms total=808.3ms
+step    6 | loss 10.5989 | 2801.4 ms | 0.497 TFLOPS
+2026-09-06 23:14:11.586 orion[23525:1502709] Delta: save=419.1ms patch=359.7ms total=778.8ms
+step    7 | loss 12.0728 | 3365.5 ms | 0.414 TFLOPS
+2026-09-06 23:14:15.766 orion[23525:1502709] Delta: save=452.9ms patch=361.6ms total=814.4ms
+step    8 | loss 11.1739 | 2832.5 ms | 0.491 TFLOPS
+2026-09-06 23:14:19.376 orion[23525:1502709] Delta: save=416.8ms patch=360.8ms total=777.6ms
+step    9 | loss 11.9844 | 3211.5 ms | 0.433 TFLOPS
+2026-09-06 23:14:23.383 orion[23525:1502709] Delta: save=427.8ms patch=367.8ms total=795.6ms
+step   10 | loss 11.4601 | 2941.1 ms | 0.473 TFLOPS
+2026-09-06 23:14:27.106 orion[23525:1502709] Delta: save=416.9ms patch=363.9ms total=780.8ms
+step   11 | loss 11.2646 | 2994.4 ms | 0.465 TFLOPS
+2026-09-06 23:14:30.920 orion[23525:1502709] Delta: save=450.8ms patch=369.4ms total=820.2ms
+step   12 | loss 10.8235 | 3150.5 ms | 0.442 TFLOPS
+2026-09-06 23:14:34.850 orion[23525:1502709] Delta: save=416.1ms patch=362.6ms total=778.8ms
+step   13 | loss 11.1483 | 2826.8 ms | 0.492 TFLOPS
+2026-09-06 23:14:38.471 orion[23525:1502709] Delta: save=423.9ms patch=370.5ms total=794.4ms
+step   14 | loss 11.5647 | 3289.2 ms | 0.423 TFLOPS
+2026-09-06 23:14:42.582 orion[23525:1502709] Delta: save=441.3ms patch=379.8ms total=821.1ms
+step   15 | loss 11.8877 | 2825.7 ms | 0.493 TFLOPS
+2026-09-06 23:14:46.225 orion[23525:1502709] Delta: save=438.3ms patch=379.4ms total=817.7ms
+step   16 | loss 11.3178 | 3391.8 ms | 0.410 TFLOPS
+2026-09-06 23:14:50.421 orion[23525:1502709] Delta: save=429.2ms patch=374.9ms total=804.1ms
+step   17 | loss 11.2586 | 2820.3 ms | 0.494 TFLOPS
+2026-09-06 23:14:54.079 orion[23525:1502709] Delta: save=466.2ms patch=371.0ms total=837.2ms
+step   18 | loss 11.0620 | 3374.5 ms | 0.413 TFLOPS
+2026-09-06 23:14:58.258 orion[23525:1502709] Delta: save=437.7ms patch=367.1ms total=804.8ms
+step   19 | loss 10.7876 | 2819.4 ms | 0.494 TFLOPS
+2026-09-06 23:15:01.854 orion[23525:1502709] Delta: save=415.3ms patch=360.8ms total=776.1ms
+step   20 | loss 11.2326 | 3167.4 ms | 0.440 TFLOPS
+2026-09-06 23:15:05.836 orion[23525:1502709] Delta: save=446.0ms patch=367.9ms total=813.9ms
+step   21 | loss 10.5776 | 2946.6 ms | 0.472 TFLOPS
+2026-09-06 23:15:09.581 orion[23525:1502709] Delta: save=421.0ms patch=377.8ms total=798.8ms
+step   22 | loss 10.9331 | 3015.3 ms | 0.462 TFLOPS
+2026-09-06 23:15:13.417 orion[23525:1502709] Delta: save=436.0ms patch=384.2ms total=820.2ms
+step   23 | loss 11.0435 | 3129.3 ms | 0.445 TFLOPS
+2026-09-06 23:15:17.356 orion[23525:1502709] Delta: save=436.7ms patch=373.5ms total=810.2ms
+step   24 | loss 9.8727 | 2828.7 ms | 0.492 TFLOPS
+2026-09-06 23:15:21.015 orion[23525:1502709] Delta: save=434.2ms patch=395.6ms total=829.8ms
+step   25 | loss 9.7433 | 3282.9 ms | 0.424 TFLOPS
+  Saved checkpoint: ./checkpoints/ckpt_00025.bin
+2026-09-06 23:15:25.471 orion[23525:1502709] Delta: save=478.2ms patch=376.5ms total=854.7ms
+step   26 | loss 10.1120 | 2830.0 ms | 0.492 TFLOPS
+2026-09-06 23:15:29.112 orion[23525:1502709] Delta: save=434.4ms patch=376.8ms total=811.2ms
+step   27 | loss 9.8285 | 3388.6 ms | 0.411 TFLOPS
+2026-09-06 23:15:33.403 orion[23525:1502709] Delta: save=526.6ms patch=375.3ms total=902.0ms
+step   28 | loss 10.2482 | 2816.0 ms | 0.494 TFLOPS
+2026-09-06 23:15:37.061 orion[23525:1502709] Delta: save=467.6ms patch=373.9ms total=841.4ms
+step   29 | loss 9.6879 | 3355.2 ms | 0.415 TFLOPS
+2026-09-06 23:15:41.241 orion[23525:1502709] Delta: save=448.3ms patch=376.8ms total=825.1ms
+step   30 | loss 10.2866 | 2834.3 ms | 0.491 TFLOPS
+2026-09-06 23:15:44.886 orion[23525:1502709] Delta: save=433.2ms patch=377.6ms total=810.8ms
+step   31 | loss 10.1938 | 3216.7 ms | 0.433 TFLOPS
+2026-09-06 23:15:48.976 orion[23525:1502709] Delta: save=491.5ms patch=381.2ms total=872.8ms
+step   32 | loss 10.2148 | 2916.3 ms | 0.477 TFLOPS
+2026-09-06 23:15:52.755 orion[23525:1502709] Delta: save=479.4ms patch=382.7ms total=862.0ms
+step   33 | loss 10.1459 | 3038.4 ms | 0.458 TFLOPS
+2026-09-06 23:15:56.617 orion[23525:1502709] Delta: save=443.4ms patch=380.2ms total=823.6ms
+step   34 | loss 10.2037 | 3110.2 ms | 0.448 TFLOPS
+2026-09-06 23:16:00.560 orion[23525:1502709] Delta: save=449.6ms patch=383.6ms total=833.3ms
+step   35 | loss 9.6176 | 2842.5 ms | 0.490 TFLOPS
+2026-09-06 23:16:04.218 orion[23525:1502709] Delta: save=435.1ms patch=380.3ms total=815.3ms
+step   36 | loss 10.1031 | 3247.5 ms | 0.429 TFLOPS
+2026-09-06 23:16:08.275 orion[23525:1502709] Delta: save=429.7ms patch=379.3ms total=809.0ms
+step   37 | loss 10.2540 | 2818.2 ms | 0.494 TFLOPS
+2026-09-06 23:16:11.943 orion[23525:1502709] Delta: save=467.4ms patch=382.2ms total=849.6ms
+step   38 | loss 10.5896 | 3390.1 ms | 0.411 TFLOPS
+2026-09-06 23:16:16.134 orion[23525:1502709] Delta: save=427.5ms patch=373.7ms total=801.3ms
+step   39 | loss 10.5827 | 2808.5 ms | 0.496 TFLOPS
+2026-09-06 23:16:19.776 orion[23525:1502709] Delta: save=443.9ms patch=389.0ms total=832.9ms
+step   40 | loss 10.2796 | 3341.2 ms | 0.417 TFLOPS
+2026-09-06 23:16:23.932 orion[23525:1502709] Delta: save=452.0ms patch=363.1ms total=815.1ms
+step   41 | loss 10.1345 | 2836.9 ms | 0.491 TFLOPS
+2026-09-06 23:16:27.546 orion[23525:1502709] Delta: save=413.8ms patch=363.2ms total=777.0ms
+step   42 | loss 10.2062 | 3122.8 ms | 0.446 TFLOPS
+2026-09-06 23:16:31.496 orion[23525:1502709] Delta: save=451.2ms patch=375.4ms total=826.6ms
+step   43 | loss 10.5126 | 2957.9 ms | 0.471 TFLOPS
+2026-09-06 23:16:35.237 orion[23525:1502709] Delta: save=418.9ms patch=363.5ms total=782.5ms
+step   44 | loss 9.9569 | 2941.5 ms | 0.473 TFLOPS
+2026-09-06 23:16:38.968 orion[23525:1502709] Delta: save=425.9ms patch=363.8ms total=789.6ms
+step   45 | loss 10.1974 | 3104.6 ms | 0.448 TFLOPS
+2026-09-06 23:16:42.850 orion[23525:1502709] Delta: save=415.7ms patch=361.9ms total=777.7ms
+step   46 | loss 9.5412 | 2798.4 ms | 0.497 TFLOPS
+2026-09-06 23:16:46.460 orion[23525:1502709] Delta: save=442.5ms patch=369.0ms total=811.6ms
+step   47 | loss 9.9772 | 3282.9 ms | 0.424 TFLOPS
+2026-09-06 23:16:50.525 orion[23525:1502709] Delta: save=419.2ms patch=362.6ms total=781.8ms
+step   48 | loss 9.9249 | 2805.3 ms | 0.496 TFLOPS
+2026-09-06 23:16:54.144 orion[23525:1502709] Delta: save=445.3ms patch=367.6ms total=812.8ms
+step   49 | loss 9.8297 | 3393.8 ms | 0.410 TFLOPS
+2026-09-06 23:16:58.324 orion[23525:1502709] Delta: save=422.3ms patch=364.1ms total=786.4ms
+step   50 | loss 10.3588 | 2822.8 ms | 0.493 TFLOPS
+  Saved checkpoint: ./checkpoints/ckpt_00050.bin
+2026-09-06 23:17:02.227 orion[23525:1502709] Delta: save=450.2ms patch=360.4ms total=810.7ms
+
+--- Training Summary ---
+  Steps:          50
+  Final loss:     10.3588
+  Total time:     193.9 s
+  Avg train:      3050.7 ms/step
+  Avg recompile:  815.6 ms/step
+  Avg total:      3878.2 ms/step
+  Avg TFLOPS:     0.456
+  Init compile:   9.4 s (4.8%)
+  Recompile:      40.8 s (21.0%)
+------------------------
+Final checkpoint: ./checkpoints/ckpt_final.bin
+      204.32 real       167.55 user        22.52 sys
+          2465251328  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              300751  page reclaims
+                  37  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+               12062  voluntary context switches
+              241535  involuntary context switches
+       1157073604148  instructions retired
+        567719000514  cycles elapsed
+          2290685888  peak memory footprint

@@ -23,7 +23,9 @@
     "throughput": {},
     "status": "PASS",
     "notes": "4/4 suites green: graph IR, passes, ANE passes, compiler equivalence. Clean rebuild from scratch. Needs no weights and no ANE.",
-    "log": "logs/test-compiler-m1-max.log"
+    "log": "logs/test-compiler-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)",
+    "superseded_by": "run 2 (clean host, 2026-09-07) \u2014 same benchmark, quiet machine"
   },
   {
     "timestamp": "2026-09-07T03:23:35Z",
@@ -66,8 +68,10 @@
     "delta_path_taken": true,
     "rss_peak_mb": 2317,
     "status": "PASS",
-    "notes": "CORRECTNESS PASS, TIMINGS CONTENDED. Delta path taken on 50/50 steps, zero fallbacks, zero restarts, compile count flat at 72. Loss 12.2324 -> 10.3588, bit-identical to M1 Pro at both endpoints, which is the expected result for two machines sharing the M1-generation ANE and fp16 accumulation order. TIMING CAVEAT: this host carried a persistent foreign load throughout — a Python 3.14 process at ~92% CPU with an elapsed time of 2 days 21 hours, plus Spotlight mds_stores at ~37% and WindowServer at ~47%; 1-min load average measured 69.66 immediately after the run. Absolute latencies here are therefore an upper bound on this silicon and must NOT be read as an M1 Max vs M1 Pro comparison. The 807-1548 ms delta spread (91%) against M1 Pro's 15% and M4 Pro's 20% is itself contention evidence; the 1548 ms outlier is the post-step-50 delta that also wrote a checkpoint. grad_accum defaulted to 10 (STORIES_ACCUM_STEPS), so avg_train_ms is over 10 microbatches and is not comparable to upstream RESULTS.md.",
-    "log": "logs/train-m1-max.log"
+    "notes": "CORRECTNESS PASS, TIMINGS CONTENDED. Delta path taken on 50/50 steps, zero fallbacks, zero restarts, compile count flat at 72. Loss 12.2324 -> 10.3588, bit-identical to M1 Pro at both endpoints, which is the expected result for two machines sharing the M1-generation ANE and fp16 accumulation order. TIMING CAVEAT: this host carried a persistent foreign load throughout \u2014 a Python 3.14 process at ~92% CPU with an elapsed time of 2 days 21 hours, plus Spotlight mds_stores at ~37% and WindowServer at ~47%; 1-min load average measured 69.66 immediately after the run. Absolute latencies here are therefore an upper bound on this silicon and must NOT be read as an M1 Max vs M1 Pro comparison. The 807-1548 ms delta spread (91%) against M1 Pro's 15% and M4 Pro's 20% is itself contention evidence; the 1548 ms outlier is the post-step-50 delta that also wrote a checkpoint. grad_accum defaulted to 10 (STORIES_ACCUM_STEPS), so avg_train_ms is over 10 microbatches and is not comparable to upstream RESULTS.md.",
+    "log": "logs/train-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)",
+    "superseded_by": "run 2 (clean host, 2026-09-07) \u2014 same benchmark, quiet machine"
   },
   {
     "timestamp": "2026-09-07T03:29:10Z",
@@ -100,8 +104,10 @@
     "delta_path_taken": true,
     "rss_peak_mb": 2294,
     "status": "PASS",
-    "notes": "Ran with an explicit --weights model/blobs/stories110m_train per finding 6, so the pristine reference blobs were not overwritten; verified afterwards by mtime (pristine still at conversion time). Same contention caveat as the train record — absolute latencies are an upper bound.",
-    "log": "logs/bench-training-m1-max.log"
+    "notes": "Ran with an explicit --weights model/blobs/stories110m_train per finding 6, so the pristine reference blobs were not overwritten; verified afterwards by mtime (pristine still at conversion time). Same contention caveat as the train record \u2014 absolute latencies are an upper bound.",
+    "log": "logs/bench-training-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)",
+    "superseded_by": "run 2 (clean host, 2026-09-07) \u2014 same benchmark, quiet machine"
   },
   {
     "timestamp": "2026-09-07T03:24:54Z",
@@ -127,8 +133,9 @@
     "throughput": {},
     "rss_peak_mb": 37,
     "status": "FAIL",
-    "notes": "All 5 GPT-2 kernels COMPILE FAILED (prefill_attn_L0, prefill_ffn_L0, final_ln, decode_proj_L0, decode_ffn_L0) with ANECCompile() CompilationFailure. Reproduces M1 Pro exactly and confirms docs/ane_constraints.md #18 — fp32 program I/O is rejected by M1-generation ANE — is a generation-wide property, not one machine's quirk. Load-independent: a compile rejection, not a timing.",
-    "log": "logs/kernels-m1-max.log"
+    "notes": "All 5 GPT-2 kernels COMPILE FAILED (prefill_attn_L0, prefill_ffn_L0, final_ln, decode_proj_L0, decode_ffn_L0) with ANECCompile() CompilationFailure. Reproduces M1 Pro exactly and confirms docs/ane_constraints.md #18 \u2014 fp32 program I/O is rejected by M1-generation ANE \u2014 is a generation-wide property, not one machine's quirk. Load-independent: a compile rejection, not a timing.",
+    "log": "logs/kernels-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)"
   },
   {
     "timestamp": "2026-09-07T03:26:20Z",
@@ -161,8 +168,9 @@
     },
     "rss_peak_mb": 692,
     "status": "FAIL",
-    "notes": "THIS IS A CPU NUMBER, NOT AN ANE NUMBER. The log carries 'ANE decode failed at step 0, falling back to CPU' and 22 compile-error/fallback lines, yet the benchmark still prints 'mode: ANE full' and reports a throughput. Same trap M1 Pro hit. 38 tok/s here against 51 tok/s for the explicit CPU run on this machine — the ANE-labelled path is slower than the CPU path because it pays for 12 failed compile attempts before falling back. Root cause is constraint #18.",
-    "log": "logs/bench-inference-ane-m1-max.log"
+    "notes": "THIS IS A CPU NUMBER, NOT AN ANE NUMBER. The log carries 'ANE decode failed at step 0, falling back to CPU' and 22 compile-error/fallback lines, yet the benchmark still prints 'mode: ANE full' and reports a throughput. Same trap M1 Pro hit. 38 tok/s here against 51 tok/s for the explicit CPU run on this machine \u2014 the ANE-labelled path is slower than the CPU path because it pays for 12 failed compile attempts before falling back. Root cause is constraint #18.",
+    "log": "logs/bench-inference-ane-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)"
   },
   {
     "timestamp": "2026-09-07T03:27:30Z",
@@ -196,7 +204,9 @@
     "rss_peak_mb": 666,
     "status": "PASS",
     "notes": "CPU-only baseline, the only inference number on this machine that means what it says. Contended host, so this is an upper bound on latency.",
-    "log": "logs/bench-inference-cpu-m1-max.log"
+    "log": "logs/bench-inference-cpu-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)",
+    "superseded_by": "run 2 (clean host, 2026-09-07) \u2014 same benchmark, quiet machine"
   },
   {
     "timestamp": "2026-09-07T03:25:40Z",
@@ -221,7 +231,238 @@
     "timing_breakdown": {},
     "throughput": {},
     "status": "FAIL",
-    "notes": "Compile failed at iteration 0, exit 1 — 0 of 100 cycles completed. Reproduces M1 Pro exactly; the synthetic swap program is fp32-I/O like the GPT-2 kernels, so constraint #18 takes it out too. Weight paths passed as literal 'A'/'B' mirroring the M1 Pro invocation; they are never read because the compile fails first.",
-    "log": "logs/bench-swap-m1-max.log"
+    "notes": "Compile failed at iteration 0, exit 1 \u2014 0 of 100 cycles completed. Reproduces M1 Pro exactly; the synthetic swap program is fp32-I/O like the GPT-2 kernels, so constraint #18 takes it out too. Weight paths passed as literal 'A'/'B' mirroring the M1 Pro invocation; they are never read because the compile fails first.",
+    "log": "logs/bench-swap-m1-max.log",
+    "run": "1 (contended host, 2026-09-06)"
+  },
+  {
+    "timestamp": "2026-09-07T06:13:37Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "compiler (hardware-free suites)",
+    "benchmark": "make_test_compiler",
+    "command": "make test-compiler",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {},
+    "throughput": {},
+    "status": "PASS",
+    "notes": "4/4 green. Load-independent; identical to run 1.",
+    "log": "logs/test-compiler-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
+  },
+  {
+    "timestamp": "2026-09-07T06:17:30Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "kernels/training/stories_train",
+    "benchmark": "train_50_steps_delta",
+    "command": "./orion train --weights model/blobs/stories110m_train --dataset data/tinystories_data00.bin --steps 50 --checkpoint_every 25",
+    "wall_clock_seconds": 204.32,
+    "timing_breakdown": {
+      "init_compile_ms": 9400.0,
+      "avg_train_ms": 3050.7,
+      "avg_recompile_ms": 815.6,
+      "avg_total_step_ms": 3878.2,
+      "delta_save_ms_avg": 441.0,
+      "delta_patch_ms_avg": 374.5,
+      "delta_total_ms_min": 776.1,
+      "delta_total_ms_max": 902.0,
+      "delta_total_ms_avg": 815.5
+    },
+    "throughput": {
+      "tflops": 0.456
+    },
+    "compile_count_start": 0,
+    "compile_count_end": 72,
+    "programs_compiled_at_startup": 72,
+    "weight_kernels_patched": 60,
+    "delta_path_taken": true,
+    "rss_peak_mb": 2351,
+    "status": "PASS",
+    "notes": "CLEAN HOST. Re-run of run 1 after reboot with Time Machine stopped; nothing above 10% CPU at start. Delta 50/50, zero fallbacks, compile count flat. Loss 12.2324 -> 10.3588, identical to run 1 AND to M1 Pro to four decimals. Delta spread collapsed from 92% (run 1) to 16%, matching M1 Pro's 15% and M4 Pro's 20% \u2014 confirming run 1's spread was contention. Now 2.0% faster than M1 Pro on avg total step, the expected direction for identical ANE/CPU topology with 2x memory bandwidth.",
+    "log": "logs/train-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
+  },
+  {
+    "timestamp": "2026-09-07T06:15:20Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "kernels/training/stories_train",
+    "benchmark": "bench_training_20_steps",
+    "command": "./orion bench training --steps 20 --weights model/blobs/stories110m_train",
+    "wall_clock_seconds": 50.49,
+    "timing_breakdown": {
+      "avg_forward_ms": 464.4,
+      "avg_bwd_dw_ms": 696.5,
+      "avg_adam_ms": 46.8,
+      "avg_recompile_ms": 820.0,
+      "avg_total_step_ms": 2027.7
+    },
+    "throughput": {},
+    "delta_path_taken": true,
+    "rss_peak_mb": 2334,
+    "status": "PASS",
+    "notes": "Clean host. 5-7% faster than M1 Pro on every phase (fwd 464.4 vs 497.7, bwd 696.5 vs 746.6, total 2027.7 vs 2159.6). Ran against stories110m_train, refreshed from pristine before the run; reference blobs untouched.",
+    "log": "logs/bench-training-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
+  },
+  {
+    "timestamp": "2026-09-07T06:14:40Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "compiler/frontends/gpt2_*",
+    "benchmark": "bench_kernels_gpt2_50_iters",
+    "command": "./orion bench kernels --iters 50",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {},
+    "throughput": {},
+    "rss_peak_mb": 35,
+    "status": "FAIL",
+    "notes": "All 5 GPT-2 kernels COMPILE FAILED, identical to run 1 and to M1 Pro. JSONL output is 0 bytes because no kernel compiled \u2014 same as M1 Pro. Confirms constraint #18 is load-independent, as expected for a compile rejection.",
+    "log": "logs/kernels-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
+  },
+  {
+    "timestamp": "2026-09-07T06:16:10Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "kernels/inference/decode_ane",
+    "benchmark": "bench_inference_ane_64_tokens",
+    "command": "./orion bench inference --ane --max_tokens 64",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {
+      "prefill_ms": 47.7,
+      "decode_p50_ms": 16.1,
+      "decode_p90_ms": 16.5
+    },
+    "throughput": {
+      "tokens_per_sec": 61
+    },
+    "rss_peak_mb": 670,
+    "status": "FAIL",
+    "notes": "STILL A CPU NUMBER \u2014 log carries 'falling back to CPU'. On a quiet host the disguise is starker: 61 tok/s 'ANE' against 62 tok/s explicit CPU, i.e. identical, because it IS the CPU path. Run 1's apparent 38-vs-51 gap was contention noise on top of the same fallback.",
+    "log": "logs/bench-inference-ane-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
+  },
+  {
+    "timestamp": "2026-09-07T06:16:50Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "kernels/inference/decode_cpu",
+    "benchmark": "bench_inference_cpu_64_tokens",
+    "command": "./orion bench inference --max_tokens 64",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {
+      "prefill_ms": 17.6,
+      "decode_p50_ms": 16.1,
+      "decode_p90_ms": 16.6
+    },
+    "throughput": {
+      "tokens_per_sec": 62
+    },
+    "rss_peak_mb": 647,
+    "status": "PASS",
+    "notes": "Clean CPU baseline. 62 tok/s against M1 Pro's 65 and M4 Pro's 255.",
+    "log": "logs/bench-inference-cpu-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
+  },
+  {
+    "timestamp": "2026-09-07T06:17:10Z",
+    "machine": "noel's Mac Studio",
+    "chip": "Apple M1 Max",
+    "hw_model": "Mac13,1",
+    "cores": {
+      "total": 10,
+      "performance": 8,
+      "efficiency": 2,
+      "ane": 16
+    },
+    "memory_gb": 64,
+    "os_version": "15.6.1",
+    "git_commit": "fcbf6ea",
+    "branch": "main",
+    "ane_generation": "M1",
+    "target": "core/ane_program_cache",
+    "benchmark": "bench_swap_100_iters",
+    "command": "./orion bench swap --weights_a A --weights_b B --iters 100",
+    "wall_clock_seconds": null,
+    "timing_breakdown": {},
+    "throughput": {},
+    "status": "FAIL",
+    "notes": "Compile failed at iteration 0, 0/100 cycles. Identical to run 1 and M1 Pro. Load-independent.",
+    "log": "logs/bench-swap-m1-max-clean.log",
+    "run": "2 (clean host, 2026-09-07)"
   }
 ]
