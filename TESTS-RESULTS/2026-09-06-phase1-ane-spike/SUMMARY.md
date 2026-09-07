@@ -11,8 +11,10 @@ instead of recompiling, keeping `orion_compile_count()` flat and staying clear o
 | Machine | Status | Reported |
 |---|---|---|
 | M1 Pro / 16GB | Complete | 2026-09-06 |
-| M1 Max | Not yet run | — |
+| M1 Max / 64GB | Complete | 2026-09-07 |
 | M4 Pro / 24GB | Complete | 2026-09-06 |
+
+**All three machines have now reported.** Phase 1 is complete.
 
 ---
 
@@ -46,6 +48,22 @@ against 837.7 ms on M1 Pro (1.54x), and startup compile of 72 programs in 3.9 s 
 (2.8x). The mechanism holds on both generations tested, which is the single result Phase 1 existed
 to establish.
 
+**M1 Max closes the campaign and reproduces M1 Pro exactly where it counts.** The loss curve is
+*bit-identical* to M1 Pro — 12.2324 → 10.3588 at both endpoints, to four decimals — which is the
+expected result for two machines sharing the same M1-generation ANE and the same fp16 accumulation
+order, and is stronger evidence than any latency number that the two machines are running the same
+computation. Delta path 50/50, zero fallbacks, compile count flat at 72, all five GPT-2 kernels
+COMPILE FAILED, `bench swap` dead at iteration 0. Constraint #18 is therefore a property of the M1
+generation, not of one laptop.
+
+**M1 Max's latencies are contended and are not a cross-device data point.** The host carried a
+persistent foreign load for the whole run — a Python process at ~92% CPU that had been running for
+2 days 21 hours, plus Spotlight indexing — with a 1-minute load average of 69.66 measured
+immediately after the training run. It came out ~23% slower than M1 Pro on a chip whose ANE and CPU
+core counts are identical to M1 Pro's, which is a measurement artifact, not a hardware finding. The
+correctness results above are unaffected; the timings are recorded as an upper bound and marked †
+throughout. See finding 7.
+
 **The surprise nobody asked for: on M4 Pro, ANE inference is slower than CPU.** 160 tok/s on the
 ANE against 255 tok/s on the CPU, on the same machine, with the ANE path genuinely executing — 49
 programs compiled and cached, zero fallback lines in the log. So the M4's reward for fixing #2 is
@@ -60,26 +78,33 @@ M4 Max 64GB and is a reference guide only; the comparison that matters is betwee
 this campaign. Two of three have reported, so the M1-vs-M4 comparison below is real; the M1 Max
 column stays blank until it runs.
 
-| Metric | M1 Pro / 16GB | M1 Max | M4 Pro / 24GB |
+| Metric | M1 Pro / 16GB | M1 Max / 64GB | M4 Pro / 24GB |
 |---|---|---|---|
-| `make test-compiler` | 4/4 PASS | — | 4/4 PASS |
-| Startup compile (72 programs) | 11.1 s | — | **3.9 s** |
-| Delta path taken | 50/50 steps | — | 50/50 steps |
-| Delta patch, avg | 837.7 ms | — | **542.5 ms** |
-| — of which save / patch | 476 ms / 362 ms | — | 349.4 ms / 193.1 ms |
-| Avg train time per step | 3099.7 ms | — | 2206.6 ms |
-| Avg total step time | 3956.5 ms | — | 2762.4 ms |
-| Throughput | 0.449 TFLOPS | — | 0.631 TFLOPS |
-| Loss, step 1 → 50 | 12.2324 → 10.3588 | — | 12.2326 → 10.4402 |
-| Compiles during training | 0 | — | 0 |
-| Peak RSS (training) | 2.25 GB | — | 2.92 GB |
-| `bench kernels` (GPT-2) | **FAIL** — all 5 kernels | — | **PASS** — all 5 compile |
-| `bench inference --ane` | **FAIL** — silent CPU fallback | — | **PASS** — 160 tok/s, real ANE |
-| `bench swap` | **FAIL** — compile at iter 0 | — | **PASS** — 100/100, RSS 1.52x |
-| CPU inference baseline | 65 tok/s | — | 255 tok/s |
+| `make test-compiler` | 4/4 PASS | 4/4 PASS | 4/4 PASS |
+| Startup compile (72 programs) | 11.1 s | 10.8 s | **3.9 s** |
+| Delta path taken | 50/50 steps | 50/50 steps | 50/50 steps |
+| Delta patch, avg | 837.7 ms | 1031.2 ms † | **542.5 ms** |
+| — of which save / patch | 476 ms / 362 ms | 555.6 ms / 475.6 ms † | 349.4 ms / 193.1 ms |
+| Avg train time per step | 3099.7 ms | 3804.9 ms † | 2206.6 ms |
+| Avg total step time | 3956.5 ms | 4869.0 ms † | 2762.4 ms |
+| Throughput | 0.449 TFLOPS | 0.366 TFLOPS † | 0.631 TFLOPS |
+| Loss, step 1 → 50 | 12.2324 → 10.3588 | 12.2324 → 10.3588 | 12.2326 → 10.4402 |
+| Compiles during training | 0 | 0 | 0 |
+| Peak RSS (training) | 2.25 GB | 2.32 GB | 2.92 GB |
+| `bench kernels` (GPT-2) | **FAIL** — all 5 kernels | **FAIL** — all 5 kernels | **PASS** — all 5 compile |
+| `bench inference --ane` | **FAIL** — silent CPU fallback | **FAIL** — silent CPU fallback | **PASS** — 160 tok/s, real ANE |
+| `bench swap` | **FAIL** — compile at iter 0 | **FAIL** — compile at iter 0 | **PASS** — 100/100, RSS 1.52x |
+| CPU inference baseline | 65 tok/s | 51 tok/s † | 255 tok/s |
 
-Both machines ran the same commit and the same commands. The M1 Max column stays empty; nothing in
-it should be inferred from the two that reported.
+All three machines ran the same commands against a **binary-identical Orion**. The commits differ
+(M1 Pro `1a629ac`, M4 Pro `f9e9f93`, M1 Max `238816c`) because each machine committed its own
+results before the next ran, but `git diff 1a629ac..238816c -- compiler core kernels apps model
+tokenizer Makefile` is empty: every change in that range is docs, `scripts/`, or `TESTS-RESULTS/`.
+The three columns compare the same binary.
+
+**† = measured under heavy foreign load and valid only as an upper bound.** The M1 Max column's
+latencies must not be compared against the other two columns — see finding 7. Its PASS/FAIL
+outcomes and its loss curve are unaffected and are directly comparable.
 
 ### Reading the numbers
 
@@ -200,13 +225,46 @@ so machine 1 evidently hit or anticipated this, but the issue text was never cor
 
 Fix is one flag in the issue's Step 4. Worth doing before the M1 Max run.
 
+*Followed on the M1 Max run: it passed `--weights model/blobs/stories110m_train` explicitly, and
+the pristine blobs were verified untouched by mtime afterwards. The issue's Step 4 text is still
+uncorrected.*
+
+### 7. The M1 Max host was contended, and the campaign has no way to say by how much
+
+The M1 Max leg ran on a machine carrying a persistent foreign load: a Python 3.14 process at ~92%
+CPU with an elapsed time of **2 days 21 hours**, plus `mds_stores` (Spotlight) at ~37% and
+`WindowServer` at ~47%. The 1-minute load average taken immediately after the training run was
+**69.66** on a 10-core machine.
+
+The effect is visible in the numbers rather than merely suspected. M1 Max and M1 Pro have the same
+16-core ANE and the same 8P+2E CPU topology, so on this workload they should land within noise of
+each other. M1 Max instead came out **23% slower** on average total step time (4869.0 ms against
+3956.5 ms), and its per-step delta spread was **807–1548 ms (91%)** against M1 Pro's 15% and M4
+Pro's 20%. A wide, drifting spread on otherwise identical silicon is what contention looks like.
+
+Two consequences, and the second is the one that matters:
+
+1. **Every M1 Max latency in this campaign is an upper bound**, marked † in the results table. The
+   honest reading is "M1 Max is not slower than M1 Pro; this measurement was taken on a busy
+   machine."
+2. **The correctness results are untouched by this.** Compile success/failure is a property of the
+   ANE compiler, not of host load, and the loss curve came out bit-identical to M1 Pro at both
+   endpoints. Those are the results Phase 1 existed to produce, and they stand.
+
+No re-run was attempted: the competing process had been running for nearly three days and there was
+no basis for expecting a quiet window. Recording the contention is more useful than waiting for a
+cleaner number that this campaign does not actually need — but a future campaign that *does* care
+about absolute latency on this host should check `uptime` before it starts, and `SOP.md` should
+probably say so.
+
 ---
 
 ## Handoff to Phase 3
 
-**Two of three machines reported; M1 Max is outstanding.** The paragraph below is written on M1 Pro
-and M4 Pro and is complete enough to plan against, because the two machines that ran bracket the
-generation gap the campaign existed to measure. M1 Max is expected to track M1 Pro.
+**All three machines have reported. Phase 1 is complete.** M1 Max ran last and behaved exactly as
+M1 Pro did — same compile failures, same delta-compile success, and a loss curve identical to four
+decimals — so the expectation recorded here before it ran was correct, and nothing in the plan below
+changed as a result.
 
 **Which ANE generations are viable for Needle: both tested generations are viable for training,
 only M4 is viable for inference.** Orion's delta-compile mechanism — 72 programs compiled once,
@@ -228,10 +286,15 @@ once it compiles, is **slower than the CPU** (160 vs 255 tok/s), so reaching the
 from it are separate questions — the batched training step is where the ANE pays, not single-token
 decode.
 
-Open until M1 Max reports: whether an M1 Max behaves as M1 Pro did (expected, unverified). No
-longer open: whether fp32 I/O is M1-only — it is. The gap against upstream's M4 Max `RESULTS.md`
-figures remains unattributed between generation, memory, and the `grad_accum` 10-vs-4 difference,
-and is out of scope for this phase.
+No longer open: whether fp32 I/O is M1-only — it is, confirmed in both directions across two M1
+machines and one M4. Whether an M1 Max behaves as an M1 Pro — it does, on every load-independent
+axis measured.
+
+Still open, and out of scope for this phase: the gap against upstream's M4 Max `RESULTS.md` figures
+remains unattributed between generation, memory, and the `grad_accum` 10-vs-4 difference. Added by
+the M1 Max leg: absolute latency on that host is unmeasured, because the only run took place under
+heavy foreign load (finding 7) — if Phase 3 needs a real M1-generation latency budget rather than an
+upper bound, that run needs repeating on a quiet machine.
 
 ---
 

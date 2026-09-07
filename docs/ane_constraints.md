@@ -355,7 +355,16 @@ So the constraint is **M1-generation-specific**. The fix remains the fp16 workar
 one codebase has to run on both — but it is a bounded compatibility fix, not a correction to
 something universally wrong.
 
-**Discovered:** Orion-fork Phase 1 ANE spike, 2026-09-06 ([#1](https://github.com/HiQS-Labs/Orion-fork/issues/1)). Confirmed failing on M1 Pro, confirmed **passing** on M4 Pro. Receipts: `TESTS-RESULTS/2026-09-06-phase1-ane-spike/`. M1 Max not yet run; it is expected to fail with M1 Pro, but that is a prediction, not a measurement.
+**Second M1-generation machine confirms it is generational, not per-machine (M1 Max, Mac13,1,
+macOS 15.6.1, 2026-09-07).** The prediction recorded here before that machine ran — "expected to
+fail with M1 Pro" — is now a measurement. All five kernels `COMPILE FAILED`, `bench swap` died at
+iteration 0, and `./orion bench inference --ane` logged `ANE decode failed at step 0, falling back
+to CPU` while still printing `mode: ANE full` and 38 tok/s against 51 tok/s for the explicit CPU
+run — the same trap, on a second chip. Two M1-generation machines with different form factors,
+memory sizes and OS point releases fail identically; one M4 passes. The dtype at the program
+boundary is the variable.
+
+**Discovered:** Orion-fork Phase 1 ANE spike, 2026-09-06 ([#1](https://github.com/HiQS-Labs/Orion-fork/issues/1)). Confirmed failing on **M1 Pro and M1 Max**, confirmed **passing** on M4 Pro. Receipts: `TESTS-RESULTS/2026-09-06-phase1-ane-spike/`.
 
 ---
 
